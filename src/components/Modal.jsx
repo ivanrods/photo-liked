@@ -19,7 +19,7 @@ function Modal({ onClick }) {
           />
 
           <article className="px-6 py-4 bg-white w-full">
-            <p className="font-medium mb-2  ">
+            <p className="font-sans font-medium mb-2  ">
               Fachada, Construção, Arquitetura.
             </p>
             <div className="flex items-center justify-between">
