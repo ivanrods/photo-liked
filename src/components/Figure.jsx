@@ -19,12 +19,14 @@ function Figure({ onClick }) {
       </div>
 
       <article className="px-6 py-4">
-        <p className="font-sans font-medium mb-2 ">Fachada, Construção, Arquitetura.</p>
+        <p className="font-sans font-medium mb-2 ">
+          Fachada, Construção, Arquitetura.
+        </p>
         <div className="flex items-center justify-between">
           <span className="bg-gray-100 px-2 pb-1 rounded-md">Tag</span>
           <FaHeart
             onClick={toggleLike}
-            className={`text-xl ${like ? "text-gray-600":"text-gray-300"}` }
+            className={`text-xl ${like ? "text-gray-600" : "text-gray-300"}`}
           />
         </div>
       </article>

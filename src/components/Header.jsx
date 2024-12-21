@@ -68,7 +68,7 @@ function Header() {
               ? "text-gray-800 font-semibold border-b-2 border-text-gray-800"
               : "text-gray-600 hover:text-gray-800"
           }
-          to="/profile"
+          to="/signIn"
         >
           <CgProfile className="text-3xl" />
         </NavLink>
