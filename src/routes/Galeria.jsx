@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Button from "../components/Button";
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Title from "../components/Title";
@@ -20,12 +19,19 @@ function Galeria() {
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {figures.map((index) => (
-            <Figure key={index} onClick={showModal} />
+            <Figure
+              src="https://cdn.pixabay.com/photo/2024/03/03/20/44/cat-8611246_1280.jpg"
+              key={index}
+              onClick={showModal}
+            />
           ))}
         </section>
-        {toggleFigure && <Modal onClick={closeModal} />}
-
-        <Button />
+        {toggleFigure && (
+          <Modal
+            src="https://cdn.pixabay.com/photo/2024/03/03/20/44/cat-8611246_1280.jpg"
+            onClick={closeModal}
+          />
+        )}
       </div>
     </main>
   );

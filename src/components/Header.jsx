@@ -20,7 +20,7 @@ function Header() {
 
   return (
     <header className="w-full fixed bg-white px-4">
-      <div className="max-w-screen-xl mx-auto flex justify-center gap-8 py-4 items-center">
+      <div className="max-w-screen-xl mx-auto flex justify-center gap-8 h-16 items-center">
         {showSearch && (
           <div className="flex justify-center items-center gap-8">
             <FaCamera className="text-3xl text-gray-600" />
