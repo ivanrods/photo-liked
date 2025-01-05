@@ -11,7 +11,7 @@ function Home() {
   const [loadFigures, setLoadFigures] = useState([]);
   const [loadMoreFig, setLoadMoreFig] = useState(6);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       async function loadData() {
@@ -25,8 +25,8 @@ function Home() {
             }
           );
           const data = await response.json();
-          setLoadFigures(data.photos);
-          console.log(data);
+          setLoadFigures(data.photos.map((photo) => ({ ...photo, liked: photo.liked || false })));
+          
         } catch (error) {
           console.error("Erro ao buscar fotos", error);
         }
@@ -41,11 +41,7 @@ function Home() {
   }
 
   function handleFigureClick(photo) {
-    setSelectedPhoto({
-      src: photo.src.original,
-      description: photo.alt,
-      alt: photo.alt,
-    });
+    setSelectedPhoto(photo);
     showModal();
   }
   function closeModal() {
@@ -55,6 +51,21 @@ function Home() {
     setLoadMoreFig((prevPage) => prevPage + 3);
   }
 
+
+  function toggleLiked(photoId) {
+    setLoadFigures((prevFigures) =>
+      prevFigures.map((photo) =>
+        photo.id === photoId ? { ...photo, liked: !photo.liked } : photo
+      )
+    );
+
+    if (selectedPhoto?.id === photoId) {
+      setSelectedPhoto((prevPhoto) => ({
+        ...prevPhoto,
+        liked: !prevPhoto.liked,
+      }));
+    }
+  }
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       {loadFigures.length > 0 && (
@@ -68,16 +79,20 @@ function Home() {
                 description={photo.alt}
                 alt={photo.alt}
                 key={photo.id}
+                like={photo.liked}
                 onClick={() => handleFigureClick(photo)}
+                onLike={() => toggleLiked(photo.id)}
               />
             ))}
           </section>
           {toggleFigure && (
             <Modal
-              src={selectedPhoto.src}
-              description={selectedPhoto.description}
+              src={selectedPhoto.src.large}
+              description={selectedPhoto.alt}
               alt={selectedPhoto.alt}
+              like={selectedPhoto.liked}
               onClick={closeModal}
+              onLike={() => toggleLiked(selectedPhoto.id)}
             />
           )}
           <Submit value="Veja mais" onClick={loadMore} />

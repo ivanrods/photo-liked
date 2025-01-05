@@ -11,14 +11,14 @@ function SignIn() {
         <Title title=" Bem vindo de volta" />
         <Form>
           <InputForm
-            placeholder="@email.com"
+            placeholder="Digite seu email"
             type="email"
             label="Email"
             id="email"
           />
 
           <InputForm
-            placeholder="senha"
+            placeholder="Digite sua senha"
             type="password"
             label="Senha"
             id="senha"

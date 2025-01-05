@@ -9,15 +9,15 @@ function SignUp() {
       <main className="bg-gray-100 w-full flex flex-col items-center justify-center h-full gap-8">
         <Title title="Crie sua conta" />
         <Form>
-          <InputForm placeholder="Nome" type="text" label="Nome" id="nome" />
+          <InputForm placeholder="Digite seu nome" type="text" label="Nome" id="nome" />
           <InputForm
-            placeholder="@email.com"
+            placeholder="Digite seu email"
             type="email"
             label="Email"
             id="email"
           />
           <InputForm
-            placeholder="senha"
+            placeholder="Digite sua senha"
             type="password"
             label="Senha"
             id="senha"
