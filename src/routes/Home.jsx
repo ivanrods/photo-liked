@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Title from "../components/Title";
 import Loader from "../components/Loader";
 import Submit from "../components/Submit";
+
+import { DataContext } from "../context/DataProvider";
 
 function Home() {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
@@ -11,7 +13,15 @@ function Home() {
   const [loadFigures, setLoadFigures] = useState([]);
   const [loadMoreFig, setLoadMoreFig] = useState(6);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  const { setDataLike } = useContext(DataContext);
+
+  const arrayLike = [];
   
+  useEffect(() => {
+    updateArrayLike();
+  }, [loadFigures]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       async function loadData() {
@@ -25,8 +35,12 @@ function Home() {
             }
           );
           const data = await response.json();
-          setLoadFigures(data.photos.map((photo) => ({ ...photo, liked: photo.liked || false })));
-          
+          setLoadFigures(
+            data.photos.map((photo) => ({
+              ...photo,
+              liked: photo.liked || false,
+            }))
+          );
         } catch (error) {
           console.error("Erro ao buscar fotos", error);
         }
@@ -50,7 +64,12 @@ function Home() {
   function loadMore() {
     setLoadMoreFig((prevPage) => prevPage + 3);
   }
-
+  function updateArrayLike() {
+    const likedPhotos = loadFigures.filter((photo) => photo.liked === true);
+    arrayLike.length = 0;
+    arrayLike.push(...likedPhotos);
+    setDataLike(arrayLike);
+  }
 
   function toggleLiked(photoId) {
     setLoadFigures((prevFigures) =>
@@ -65,6 +84,8 @@ function Home() {
         liked: !prevPhoto.liked,
       }));
     }
+
+    updateArrayLike();
   }
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
