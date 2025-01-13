@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../components/Button";
+import Submit from "../components/Submit";
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Title from "../components/Title";
@@ -12,7 +12,7 @@ function Search() {
   function closeModal() {
     setToggleFigure(false);
   }
-  const figures = [0, 1];
+  const figures = [];
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
@@ -25,7 +25,7 @@ function Search() {
         </section>
         {toggleFigure && <Modal onClick={closeModal} />}
 
-        <Button />
+        <Submit value="Veja mais"/>
       </div>
     </main>
   );

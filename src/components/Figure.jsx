@@ -35,7 +35,7 @@ function Figure({ onClick, src, alt, description, like, mod, onLike }) {
         >
           {description}
         </p>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-2">
           <span className="bg-gray-200 px-2 rounded-md">Photo</span>
           <FaHeart
             onClick={onLike}

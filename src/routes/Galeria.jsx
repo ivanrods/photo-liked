@@ -9,12 +9,15 @@ function Galeria() {
   const { dataLike } = useContext(DataContext);
 
   const [toggleFigure, setToggleFigure] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-  function showModal() {
+  function showModal(obj) {
     setToggleFigure(true);
+    setSelectedPhoto(obj);
   }
   function closeModal() {
     setToggleFigure(false);
+    setSelectedPhoto(null);
   }
 
   return (
@@ -27,16 +30,19 @@ function Galeria() {
             <Figure
               src={index.src.large}
               key={index.id}
-              onClick={showModal}
               description={index.alt}
               alt={index.alt}
               like={index.liked}
+              onClick={() => showModal(index)}
             />
           ))}
         </section>
-        {toggleFigure && (
+        {toggleFigure && selectedPhoto && (
           <Modal
-            src="https://cdn.pixabay.com/photo/2024/03/03/20/44/cat-8611246_1280.jpg"
+            src={selectedPhoto.src.large}
+            description={selectedPhoto.alt}
+            alt={selectedPhoto.alt}
+            like={selectedPhoto.liked}
             onClick={closeModal}
           />
         )}
