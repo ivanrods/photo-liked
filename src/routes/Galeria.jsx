@@ -6,7 +6,7 @@ import Title from "../components/Title";
 import { DataContext } from "../context/DataProvider";
 
 function Galeria() {
-  const { dataLike } = useContext(DataContext);
+  const { dataLike, setDataLike } = useContext(DataContext);
 
   const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -19,7 +19,21 @@ function Galeria() {
     setToggleFigure(false);
     setSelectedPhoto(null);
   }
+  function toggleLiked(photoId) {
+    setDataLike((prevFigures) =>
+      prevFigures.map((photo) =>
+        photo.id === photoId ? { ...photo, liked: !photo.liked } : photo
+      )
+    );
 
+    if (selectedPhoto?.id === photoId) {
+      setSelectedPhoto((prevPhoto) => ({
+        ...prevPhoto,
+        liked: !prevPhoto.liked,
+      }));
+    }
+   
+  }
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
@@ -34,6 +48,7 @@ function Galeria() {
               alt={index.alt}
               like={index.liked}
               onClick={() => showModal(index)}
+              onLike={() => toggleLiked(index.id)}
             />
           ))}
         </section>
@@ -44,6 +59,7 @@ function Galeria() {
             alt={selectedPhoto.alt}
             like={selectedPhoto.liked}
             onClick={closeModal}
+            onLike={() => toggleLiked(selectedPhoto.id)}
           />
         )}
       </div>

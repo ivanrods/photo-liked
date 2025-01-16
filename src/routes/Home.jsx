@@ -22,6 +22,7 @@ function Home() {
     updateArrayLike();
   }, [loadFigures]);
 
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       async function loadData() {
@@ -62,7 +63,7 @@ function Home() {
     setToggleFigure(false);
   }
   function loadMore() {
-    setLoadMoreFig((prevPage) => prevPage + 3);
+    setLoadMoreFig((prevPage) => prevPage + 6);
   }
   function updateArrayLike() {
     const likedPhotos = loadFigures.filter((photo) => photo.liked === true);
