@@ -3,7 +3,6 @@ import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Title from "../components/Title";
 import Loader from "../components/Loader";
-import Submit from "../components/Submit";
 
 import { DataContext } from "../context/DataProvider";
 
@@ -11,18 +10,16 @@ function Home() {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
   const [toggleFigure, setToggleFigure] = useState(false);
   const [loadFigures, setLoadFigures] = useState([]);
-  const [loadMoreFig, setLoadMoreFig] = useState(6);
+  const [loadMoreFig, setLoadMoreFig] = useState(9);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-
   const { setDataLike } = useContext(DataContext);
 
   const arrayLike = [];
-  
+
   useEffect(() => {
     updateArrayLike();
   }, [loadFigures]);
 
-  
   useEffect(() => {
     const timer = setTimeout(() => {
       async function loadData() {
@@ -88,6 +85,24 @@ function Home() {
 
     updateArrayLike();
   }
+
+  function handleScroll() {
+    if (
+      window.scrollY + window.innerHeight >=
+      document.body.scrollHeight - 10
+    ) {
+      loadMore();
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       {loadFigures.length > 0 && (
@@ -117,7 +132,6 @@ function Home() {
               onLike={() => toggleLiked(selectedPhoto.id)}
             />
           )}
-          <Submit value="Veja mais" onClick={loadMore} />
         </div>
       )}
       {loadFigures == 0 && <Loader />}

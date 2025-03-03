@@ -1,4 +1,5 @@
 import { FaHeart } from "react-icons/fa";
+
 function Figure({ onClick, src, alt, description, like, mod, onLike }) {
   return (
     <div
@@ -29,7 +30,7 @@ function Figure({ onClick, src, alt, description, like, mod, onLike }) {
 
       <article className={"px-6 py-4 bg-white"}>
         <p
-          className={`font-sans font-medium mb-2${
+          className={` font-sans font-medium mb-2${
             mod ? "w-full" : "overflow-hidden truncate h-7"
           }`}
         >

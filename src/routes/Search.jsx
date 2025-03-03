@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Submit from "../components/Submit";
+
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Title from "../components/Title";
@@ -25,7 +25,7 @@ function Search() {
         </section>
         {toggleFigure && <Modal onClick={closeModal} />}
 
-        <Submit value="Veja mais"/>
+       
       </div>
     </main>
   );
