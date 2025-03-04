@@ -8,9 +8,9 @@ import { DataContext } from "../context/DataProvider";
 
 function Home() {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
-  const [toggleFigure, setToggleFigure] = useState(false);
-  const [loadFigures, setLoadFigures] = useState([]);
   const [loadMoreFig, setLoadMoreFig] = useState(9);
+  const [loadFigures, setLoadFigures] = useState([]);
+  const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const { setDataLike } = useContext(DataContext);
 
@@ -48,6 +48,10 @@ function Home() {
     return () => clearTimeout(timer);
   }, [loadMoreFig]);
 
+  function loadMore() {
+    setLoadMoreFig((prevPage) => prevPage + 6);
+  }
+
   function showModal() {
     setToggleFigure(true);
   }
@@ -59,9 +63,7 @@ function Home() {
   function closeModal() {
     setToggleFigure(false);
   }
-  function loadMore() {
-    setLoadMoreFig((prevPage) => prevPage + 6);
-  }
+  
   function updateArrayLike() {
     const likedPhotos = loadFigures.filter((photo) => photo.liked === true);
     arrayLike.length = 0;
