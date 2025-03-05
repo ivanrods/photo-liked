@@ -2,18 +2,29 @@ import { FaCamera, FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import Input from "./Input";
 import { useNavigate, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { DataContext } from "../context/DataProvider";
+
 function Header() {
+  const { setSearch } = useContext(DataContext);
   const [showSearch, setShowSearch] = useState(true);
+  const [inputValue, setInputValue] = useState("");
 
   const navigate = useNavigate();
 
+  const handleInputChange = (event) => {
+    const value = event.target.value.trim();
+    if (value) {
+      setInputValue(value);
+    }
+  };
   function toggleSearch() {
     setShowSearch(!showSearch);
   }
 
   const verificarTecla = (evento) => {
     if (evento.key === "Enter") {
+      setSearch(inputValue);
       navigate("/search");
     }
   };
@@ -60,6 +71,7 @@ function Header() {
           showSearch={showSearch}
           onClick={toggleSearch}
           onKeyPress={verificarTecla}
+          onChange={handleInputChange}
         />
 
         <NavLink

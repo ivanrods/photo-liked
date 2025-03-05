@@ -3,8 +3,9 @@ export const DataContext = createContext();
 
 function DataProvider({ children }) {
   const [dataLike, setDataLike] = useState("Valor init");
+  const [search, setSearch] = useState('a')
   return (
-    <DataContext.Provider value={{ dataLike, setDataLike }}>
+    <DataContext.Provider value={{ dataLike, setDataLike, search, setSearch }}>
       {children}
     </DataContext.Provider>
   ); 

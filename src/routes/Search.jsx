@@ -10,7 +10,7 @@ function Search() {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
   const [toggleFigure, setToggleFigure] = useState(false);
   const [figures, setFigures] = useState([]);
-  const [searchTerm] = useState("a");
+  const { search } = useContext(DataContext);
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const { setDataLike } = useContext(DataContext);
@@ -26,7 +26,7 @@ function Search() {
       async function loadData() {
         try {
           const response = await fetch(
-            `https://api.pexels.com/v1/curated?per_page=20`,
+            `https://api.pexels.com/v1/curated?per_page=50`,
             {
               headers: {
                 Authorization: accessKey,
@@ -35,8 +35,9 @@ function Search() {
           );
           const data = await response.json();
           const filteredPhotos = data.photos
+
             .filter((photo) =>
-              photo.alt.toLowerCase().includes(searchTerm.toLowerCase())
+              photo.alt.toLowerCase().includes(search.toLowerCase())
             )
             .map((photo) => ({
               ...photo,
@@ -48,10 +49,12 @@ function Search() {
           console.error("Erro ao buscar fotos", error);
         }
       }
+
       loadData();
+    
     }, 500);
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [search]);
 
   function showModal() {
     setToggleFigure(true);
@@ -70,7 +73,6 @@ function Search() {
     arrayLike.length = 0;
     arrayLike.push(...likedPhotos);
     setDataLike(arrayLike);
-   
   }
 
   function toggleLiked(photoId) {
@@ -93,7 +95,7 @@ function Search() {
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
-        <Title title="Search" />
+        <Title title={`Resultados para: "${search}"`} />
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {figures.map((photo) => (
@@ -119,6 +121,7 @@ function Search() {
           />
         )}
       </div>
+   
     </main>
   );
 }

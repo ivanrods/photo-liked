@@ -13,8 +13,9 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 function App() {
   return (
     <BrowserRouter>
-      <Header />
       <DataProvider>
+        <Header />
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
