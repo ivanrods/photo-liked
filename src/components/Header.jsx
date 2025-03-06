@@ -18,19 +18,22 @@ function Header() {
       setInputValue(value);
     }
   };
-  function toggleSearch() {
-    setShowSearch(!showSearch);
-  }
-
-  const verificarTecla = (evento) => {
-    if (evento.key === "Enter") {
+  
+  const verificarTecla = (evento) => { 
+    const value = evento.target.value.trim();
+    if (evento.key === "Enter" && value) {
       setSearch(inputValue);
       navigate("/search");
     }
   };
 
+  function toggleSearch() {
+    setShowSearch(!showSearch);
+  }
+
+  
   return (
-    <header className="w-full fixed bg-white px-4">
+    <header className="w-full fixed bg-white px-4 z-10">
       <div className="max-w-screen-xl mx-auto flex justify-center gap-8 h-16 items-center">
         {showSearch && (
           <div className="flex justify-center items-center gap-8">

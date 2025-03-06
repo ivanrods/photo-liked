@@ -8,7 +8,7 @@ function Modal({ onClick, src, alt, mod, description, like, onLike }) {
   return (
     <div
       className=" fixed top-0 left-0 flex justify-center items-center w-screen h-screen 
-    justify-items-center bg-black/90 box-border "
+    justify-items-center bg-black/90 box-border z-20"
     >
       <IoClose
         onClick={onClick}

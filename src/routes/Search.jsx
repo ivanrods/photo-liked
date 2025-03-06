@@ -10,6 +10,9 @@ function Search() {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
   const [toggleFigure, setToggleFigure] = useState(false);
   const [figures, setFigures] = useState([]);
+
+  const [loadMoreFig, setLoadMoreFig] = useState(10);
+
   const { search } = useContext(DataContext);
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -26,7 +29,7 @@ function Search() {
       async function loadData() {
         try {
           const response = await fetch(
-            `https://api.pexels.com/v1/curated?per_page=50`,
+            `https://api.pexels.com/v1/search?query=${encodeURIComponent(search)}&per_page=${loadMoreFig}`,
             {
               headers: {
                 Authorization: accessKey,
@@ -41,20 +44,21 @@ function Search() {
             )
             .map((photo) => ({
               ...photo,
-              liked: false, // Garante que todas as fotos começam sem like
+              liked: false, 
             }));
 
           setFigures(filteredPhotos);
+          
         } catch (error) {
           console.error("Erro ao buscar fotos", error);
         }
       }
-
+      
       loadData();
     
     }, 500);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, loadMoreFig]);
 
   function showModal() {
     setToggleFigure(true);
@@ -90,8 +94,28 @@ function Search() {
     }
 
     updateArrayLike();
+    
   }
 
+  function loadMore() {
+    setLoadMoreFig((prevPage) => prevPage + 6);
+  }
+  function handleScroll() {
+    if (
+      window.scrollY + window.innerHeight >=
+      document.body.scrollHeight - 10
+    ) {
+      loadMore();
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
