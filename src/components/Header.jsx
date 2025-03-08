@@ -7,6 +7,7 @@ import { DataContext } from "../context/DataProvider";
 
 function Header() {
   const { setSearch } = useContext(DataContext);
+  const { setLoadMoreFig } = useContext(DataContext);
   const [showSearch, setShowSearch] = useState(true);
   const [inputValue, setInputValue] = useState("");
 
@@ -22,8 +23,11 @@ function Header() {
   const verificarTecla = (evento) => { 
     const value = evento.target.value.trim();
     if (evento.key === "Enter" && value) {
+       window.scrollTo({ top: 0, behavior: "smooth" });
+      setLoadMoreFig(9)
       setSearch(inputValue);
       navigate("/search");
+     
     }
   };
 

@@ -11,7 +11,7 @@ function Search() {
   const [toggleFigure, setToggleFigure] = useState(false);
   const [figures, setFigures] = useState([]);
 
-  const [loadMoreFig, setLoadMoreFig] = useState(10);
+  const { loadMoreFig, setLoadMoreFig } = useContext(DataContext);
 
   const { search } = useContext(DataContext);
 
@@ -29,13 +29,16 @@ function Search() {
       async function loadData() {
         try {
           const response = await fetch(
-            `https://api.pexels.com/v1/search?query=${encodeURIComponent(search)}&per_page=${loadMoreFig}`,
+            `https://api.pexels.com/v1/search?query=${encodeURIComponent(
+              search
+            )}&per_page=${loadMoreFig}`,
             {
               headers: {
                 Authorization: accessKey,
               },
             }
           );
+         
           const data = await response.json();
           const filteredPhotos = data.photos
 
@@ -44,18 +47,16 @@ function Search() {
             )
             .map((photo) => ({
               ...photo,
-              liked: false, 
+              liked: false,
             }));
 
           setFigures(filteredPhotos);
-          
         } catch (error) {
           console.error("Erro ao buscar fotos", error);
         }
       }
-      
+
       loadData();
-    
     }, 500);
     return () => clearTimeout(timer);
   }, [search, loadMoreFig]);
@@ -94,7 +95,6 @@ function Search() {
     }
 
     updateArrayLike();
-    
   }
 
   function loadMore() {
@@ -119,7 +119,12 @@ function Search() {
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
-        <Title title={`Resultados para: "${search}"`} />
+
+        {figures.length > 0 ? (
+          <Title title={`Resultados para: "${search}"`} />
+        ) : (
+          <Title title={`Ops, Não encontramos nenhum resultado para : "${search}" `} />
+        )}
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {figures.map((photo) => (
@@ -145,7 +150,6 @@ function Search() {
           />
         )}
       </div>
-   
     </main>
   );
 }
