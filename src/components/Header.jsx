@@ -61,9 +61,9 @@ function Header() {
                     ? "text-gray-800 font-semibold border-b-2 border-text-gray-800"
                     : "text-gray-600 hover:text-gray-800"
                 }
-                to="/galeria"
+                to="/liked"
               >
-                Galeria
+                Liked
               </NavLink>
             </p>
 
