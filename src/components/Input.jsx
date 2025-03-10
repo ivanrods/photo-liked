@@ -14,7 +14,7 @@ function Input({ showSearch, onClick, onKeyPress, onChange }) {
         onKeyPress={onKeyPress}
         className="focus:outline-none w-full h-full bg-transparent"
         type="text"
-        placeholder="Pesquisar por imagens e coleções"
+        placeholder="Search for images and collections"
         onChange={onChange}
       />
     </div>

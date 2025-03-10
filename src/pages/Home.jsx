@@ -14,6 +14,8 @@ function Home() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const { setDataLike } = useContext(DataContext);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const arrayLike = [];
 
   useEffect(() => {
@@ -21,7 +23,8 @@ function Home() {
   }, [loadFigures]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+      setIsLoading(true)
       async function loadData() {
         try {
           const response = await fetch(
@@ -41,11 +44,12 @@ function Home() {
           );
         } catch (error) {
           console.error("Erro ao buscar fotos", error);
+        } finally {
+          setIsLoading(false); 
         }
       }
       loadData();
-    }, 500);
-    return () => clearTimeout(timer);
+  
   }, [loadMoreFig]);
 
   function loadMore() {
@@ -136,7 +140,7 @@ function Home() {
           )}
         </div>
       )}
-      {loadFigures == 0 && <Loader />}
+      {isLoading && <Loader />}
     </main>
   );
 }

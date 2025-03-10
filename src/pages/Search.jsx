@@ -5,6 +5,7 @@ import Modal from "../components/Modal";
 import Title from "../components/Title";
 
 import { DataContext } from "../context/DataProvider";
+import Loader from "../components/Loader";
 
 function Search() {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
@@ -17,7 +18,7 @@ function Search() {
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const { setDataLike } = useContext(DataContext);
-
+  const [isLoading, setIsLoading] = useState(false);
   const arrayLike = [];
 
   useEffect(() => {
@@ -25,7 +26,8 @@ function Search() {
   }, [figures]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+  
+      setIsLoading(true);
       async function loadData() {
         try {
           const response = await fetch(
@@ -38,7 +40,7 @@ function Search() {
               },
             }
           );
-         
+
           const data = await response.json();
           const filteredPhotos = data.photos
 
@@ -53,12 +55,13 @@ function Search() {
           setFigures(filteredPhotos);
         } catch (error) {
           console.error("Erro ao buscar fotos", error);
+        } finally {
+          setIsLoading(false);
         }
       }
 
       loadData();
-    }, 500);
-    return () => clearTimeout(timer);
+   
   }, [search, loadMoreFig]);
 
   function showModal() {
@@ -119,11 +122,12 @@ function Search() {
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
-
         {figures.length > 0 ? (
-          <Title title={`Resultados para: "${search}"`} />
+          <Title title={`Results for: "${search}"`} />
         ) : (
-          <Title title={`Ops, Não encontramos nenhum resultado para : "${search}" `} />
+          <Title
+            title={`Oops, We couldn't find any results for : "${search}" `}
+          />
         )}
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -150,6 +154,7 @@ function Search() {
           />
         )}
       </div>
+      {isLoading && <Loader />}
     </main>
   );
 }
