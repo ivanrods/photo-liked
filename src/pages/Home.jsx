@@ -16,40 +16,36 @@ function Home() {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const arrayLike = [];
-
   useEffect(() => {
     updateArrayLike();
   }, [loadFigures]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-      setIsLoading(true)
-      async function loadData() {
-        try {
-          const response = await fetch(
-            `https://api.pexels.com/v1/curated?per_page=${loadMoreFig}`,
-            {
-              headers: {
-                Authorization: accessKey,
-              },
-            }
-          );
-          const data = await response.json();
-          setLoadFigures(
-            data.photos.map((photo) => ({
-              ...photo,
-              liked: photo.liked || false,
-            }))
-          );
-        } catch (error) {
-          console.error("Erro ao buscar fotos", error);
-        } finally {
-          setIsLoading(false); 
-        }
+    setIsLoading(true);
+    async function loadData() {
+      try {
+        const response = await fetch(
+          `https://api.pexels.com/v1/curated?per_page=${loadMoreFig}`,
+          {
+            headers: {
+              Authorization: accessKey,
+            },
+          }
+        );
+        const data = await response.json();
+        setLoadFigures(
+          data.photos.map((photo) => ({
+            ...photo,
+            liked: photo.liked || false,
+          }))
+        );
+      } catch (error) {
+        console.error("Erro ao buscar fotos", error);
+      } finally {
+        setIsLoading(false);
       }
-      loadData();
-  
+    }
+    loadData();
   }, [loadMoreFig]);
 
   function loadMore() {
@@ -67,12 +63,15 @@ function Home() {
   function closeModal() {
     setToggleFigure(false);
   }
-  
+
   function updateArrayLike() {
     const likedPhotos = loadFigures.filter((photo) => photo.liked === true);
-    arrayLike.length = 0;
-    arrayLike.push(...likedPhotos);
-    setDataLike(arrayLike);
+    setDataLike((prevData) => {
+      const newPhotos = likedPhotos.filter(
+        (photo) => !prevData.some((prevPhoto) => prevPhoto.id === photo.id)
+      );
+      return [...prevData, ...newPhotos];
+    });
   }
 
   function toggleLiked(photoId) {

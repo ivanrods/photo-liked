@@ -19,49 +19,45 @@ function Search() {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const { setDataLike } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(false);
-  const arrayLike = [];
 
   useEffect(() => {
     updateArrayLike();
   }, [figures]);
 
   useEffect(() => {
-  
-      setIsLoading(true);
-      async function loadData() {
-        try {
-          const response = await fetch(
-            `https://api.pexels.com/v1/search?query=${encodeURIComponent(
-              search
-            )}&per_page=${loadMoreFig}`,
-            {
-              headers: {
-                Authorization: accessKey,
-              },
-            }
-          );
+    setIsLoading(true);
+    async function loadData() {
+      try {
+        const response = await fetch(
+          `https://api.pexels.com/v1/search?query=${encodeURIComponent(
+            search
+          )}&per_page=${loadMoreFig}`,
+          {
+            headers: {
+              Authorization: accessKey,
+            },
+          }
+        );
 
-          const data = await response.json();
-          const filteredPhotos = data.photos
+        const data = await response.json();
+        const filteredPhotos = data.photos
 
-            .filter((photo) =>
-              photo.alt.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((photo) => ({
-              ...photo,
-              liked: false,
-            }));
+          .filter((photo) =>
+            photo.alt.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((photo) => ({
+            ...photo,
+            liked: false,
+          }));
 
-          setFigures(filteredPhotos);
-        } catch (error) {
-          console.error("Erro ao buscar fotos", error);
-        } finally {
-          setIsLoading(false);
-        }
+        setFigures(filteredPhotos);
+      } catch (error) {
+        console.error("Erro ao buscar fotos", error);
+      } finally {
+        setIsLoading(false);
       }
-
-      loadData();
-   
+    }
+    loadData();
   }, [search, loadMoreFig]);
 
   function showModal() {
@@ -78,9 +74,12 @@ function Search() {
 
   function updateArrayLike() {
     const likedPhotos = figures.filter((photo) => photo.liked === true);
-    arrayLike.length = 0;
-    arrayLike.push(...likedPhotos);
-    setDataLike(arrayLike);
+    setDataLike((prevData) => {
+      const newPhotos = likedPhotos.filter(
+        (photo) => !prevData.some((prevPhoto) => prevPhoto.id === photo.id)
+      );
+      return [...prevData, ...newPhotos];
+    });
   }
 
   function toggleLiked(photoId) {

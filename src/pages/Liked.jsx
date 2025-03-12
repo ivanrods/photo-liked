@@ -5,9 +5,9 @@ import Title from "../components/Title";
 
 import { DataContext } from "../context/DataProvider";
 
-function Galeria() {
+function Liked() {
   const { dataLike, setDataLike } = useContext(DataContext);
-
+  
   const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
@@ -19,11 +19,13 @@ function Galeria() {
     setToggleFigure(false);
     setSelectedPhoto(null);
   }
+
   function toggleLiked(photoId) {
     setDataLike((prevFigures) =>
       prevFigures.map((photo) =>
         photo.id === photoId ? { ...photo, liked: !photo.liked } : photo
       )
+      .filter((photo) => photo.liked)
     );
 
     if (selectedPhoto?.id === photoId) {
@@ -66,4 +68,4 @@ function Galeria() {
     </main>
   );
 }
-export default Galeria;
+export default Liked;
