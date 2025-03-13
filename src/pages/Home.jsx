@@ -17,6 +17,9 @@ function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+  useEffect(() => {
     updateArrayLike();
   }, [loadFigures]);
 
@@ -33,12 +36,20 @@ function Home() {
           }
         );
         const data = await response.json();
-        setLoadFigures(
-          data.photos.map((photo) => ({
-            ...photo,
-            liked: photo.liked || false,
-          }))
-        );
+        setLoadFigures((prevFigures) => {
+          const newPhotos = data.photos.filter(
+            (photo) =>
+              !prevFigures.some((prevPhoto) => prevPhoto.id === photo.id)
+          );
+
+          return [
+            ...prevFigures,
+            ...newPhotos.map((photo) => ({
+              ...photo,
+              liked: photo.liked || false,
+            })),
+          ];
+        });
       } catch (error) {
         console.error("Erro ao buscar fotos", error);
       } finally {
@@ -87,8 +98,6 @@ function Home() {
         liked: !prevPhoto.liked,
       }));
     }
-
-    updateArrayLike();
   }
 
   function handleScroll() {

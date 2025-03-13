@@ -7,10 +7,11 @@ import { DataContext } from "../context/DataProvider";
 
 function Liked() {
   const { dataLike, setDataLike } = useContext(DataContext);
-  
+
   const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
 
+  
   function showModal(obj) {
     setToggleFigure(true);
     setSelectedPhoto(obj);
@@ -22,10 +23,11 @@ function Liked() {
 
   function toggleLiked(photoId) {
     setDataLike((prevFigures) =>
-      prevFigures.map((photo) =>
-        photo.id === photoId ? { ...photo, liked: !photo.liked } : photo
-      )
-      .filter((photo) => photo.liked)
+      prevFigures
+        .map((photo) =>
+          photo.id === photoId ? { ...photo, liked: !photo.liked } : photo
+        )
+        .filter((photo) => photo.liked)
     );
 
     if (selectedPhoto?.id === photoId) {
@@ -34,7 +36,7 @@ function Liked() {
         liked: !prevPhoto.liked,
       }));
     }
-   
+    console.log(dataLike);
   }
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">

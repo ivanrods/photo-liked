@@ -16,7 +16,6 @@ function DataProvider({ children }) {
 
   const [search, setSearch] = useState("");
   const [loadMoreFig, setLoadMoreFig] = useState(12);
-  console.log(dataLike);
   return (
     <DataContext.Provider
       value={{
