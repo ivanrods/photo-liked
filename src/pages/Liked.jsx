@@ -1,58 +1,37 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Title from "../components/Title";
 
 import { DataContext } from "../context/DataProvider";
+import usePhotos from "../hooks/usePhotos";
 
 function Liked() {
-  const { dataLike, setDataLike } = useContext(DataContext);
+  const {
+    selectedPhoto,
+    toggleFigure,
+    handleFigureClick,
+    closeModal,
+    toggleLiked,
+  } = usePhotos();
 
-  const [toggleFigure, setToggleFigure] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const { dataLike } = useContext(DataContext);
 
-  
-  function showModal(obj) {
-    setToggleFigure(true);
-    setSelectedPhoto(obj);
-  }
-  function closeModal() {
-    setToggleFigure(false);
-    setSelectedPhoto(null);
-  }
-
-  function toggleLiked(photoId) {
-    setDataLike((prevFigures) =>
-      prevFigures
-        .map((photo) =>
-          photo.id === photoId ? { ...photo, liked: !photo.liked } : photo
-        )
-        .filter((photo) => photo.liked)
-    );
-
-    if (selectedPhoto?.id === photoId) {
-      setSelectedPhoto((prevPhoto) => ({
-        ...prevPhoto,
-        liked: !prevPhoto.liked,
-      }));
-    }
-    console.log(dataLike);
-  }
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
         <Title title="Liked images" />
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {dataLike.map((index) => (
+          {dataLike.map((photo) => (
             <Figure
-              src={index.src.large}
-              key={index.id}
-              description={index.alt}
-              alt={index.alt}
-              like={index.liked}
-              onClick={() => showModal(index)}
-              onLike={() => toggleLiked(index.id)}
+              src={photo.src.large}
+              key={photo.id}
+              description={photo.alt}
+              alt={photo.alt}
+              like={photo.liked}
+              onClick={() => handleFigureClick(photo)}
+              onLike={() => toggleLiked(photo.id)}
             />
           ))}
         </section>
