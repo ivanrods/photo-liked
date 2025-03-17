@@ -12,7 +12,7 @@ function Liked() {
     toggleFigure,
     handleFigureClick,
     closeModal,
-    toggleLiked,
+    toggleLikedFromFavorites,
   } = usePhotos();
 
   const { dataLike } = useContext(DataContext);
@@ -31,7 +31,7 @@ function Liked() {
               alt={photo.alt}
               like={photo.liked}
               onClick={() => handleFigureClick(photo)}
-              onLike={() => toggleLiked(photo.id)}
+              onLike={() => toggleLikedFromFavorites(photo.id)}
             />
           ))}
         </section>
@@ -42,7 +42,7 @@ function Liked() {
             alt={selectedPhoto.alt}
             like={selectedPhoto.liked}
             onClick={closeModal}
-            onLike={() => toggleLiked(selectedPhoto.id)}
+            onLike={() => toggleLikedFromFavorites(selectedPhoto.id)}
           />
         )}
       </div>

@@ -2,16 +2,14 @@ import { useState, useEffect, useContext } from "react";
 
 import { DataContext } from "../context/DataProvider";
 
-
 const usePhotos = (searchTerm = "") => {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
   const [loadMoreFig, setLoadMoreFig] = useState(9);
   const [loadFigures, setLoadFigures] = useState([]);
   const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const { setDataLike } = useContext(DataContext);
-
   const [isLoading, setIsLoading] = useState(false);
+  const { setDataLike } = useContext(DataContext);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -21,6 +19,7 @@ const usePhotos = (searchTerm = "") => {
   }, [loadFigures]);
 
   useEffect(() => {
+    
     setIsLoading(true);
     async function loadData() {
       try {
@@ -38,7 +37,6 @@ const usePhotos = (searchTerm = "") => {
           const newPhotos = data.photos.filter(
             (photo) =>
               !prevFigures.some((prevPhoto) => prevPhoto.id === photo.id)
-           
           );
 
           return [
@@ -56,10 +54,9 @@ const usePhotos = (searchTerm = "") => {
       }
     }
     loadData();
-   
   }, [loadMoreFig, searchTerm]);
 
-  //funçoies de renderização
+  //funçoes de renderização
   function loadMore() {
     setLoadMoreFig((prevPage) => prevPage + 6);
   }
@@ -118,9 +115,26 @@ const usePhotos = (searchTerm = "") => {
         liked: !prevPhoto.liked,
       }));
     }
-    updateArrayLike();
+    
   }
 
+  function toggleLikedFromFavorites(photoId) {
+    setDataLike((prevData) => prevData.filter((photo) => photo.id !== photoId));
+  
+    setLoadFigures((prevFigures) =>
+      prevFigures.map((photo) =>
+        photo.id === photoId ? { ...photo, liked: false } : photo
+      )
+    );
+  
+    if (selectedPhoto?.id === photoId) {
+      setSelectedPhoto((prevPhoto) => ({
+        ...prevPhoto,
+        liked: false,
+      }));
+    }
+  }
+  
   return {
     loadFigures,
     isLoading,
@@ -130,6 +144,9 @@ const usePhotos = (searchTerm = "") => {
     handleFigureClick,
     closeModal,
     toggleLiked,
+    setLoadFigures,
+    setSelectedPhoto,
+    toggleLikedFromFavorites
   };
 };
 
