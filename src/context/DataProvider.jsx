@@ -17,6 +17,7 @@ function DataProvider({ children }) {
 
   const [search, setSearch] = useState("");
   const [loadMoreFig, setLoadMoreFig] = useState(12);
+  const [loadFigures, setLoadFigures] = useState([]);
   return (
     <DataContext.Provider
       value={{
@@ -26,6 +27,8 @@ function DataProvider({ children }) {
         setSearch,
         loadMoreFig,
         setLoadMoreFig,
+        loadFigures, 
+        setLoadFigures
       }}
     >
       {children}

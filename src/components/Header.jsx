@@ -7,7 +7,7 @@ import { DataContext } from "../context/DataProvider";
 
 function Header() {
   const { setSearch } = useContext(DataContext);
-  const { setLoadMoreFig } = useContext(DataContext);
+  const { setLoadMoreFig, setLoadFigures } = useContext(DataContext);
   const [showSearch, setShowSearch] = useState(true);
   const [inputValue, setInputValue] = useState("");
 
@@ -27,7 +27,7 @@ function Header() {
       setLoadMoreFig(9)
       setSearch(inputValue);
       navigate("/search");
-     
+     setLoadFigures([])
     }
   };
 

@@ -5,14 +5,14 @@ import { DataContext } from "../context/DataProvider";
 const usePhotos = (searchTerm = "") => {
   const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
   const [loadMoreFig, setLoadMoreFig] = useState(9);
-  const [loadFigures, setLoadFigures] = useState([]);
   const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { setDataLike } = useContext(DataContext);
+  const { setDataLike, loadFigures, setLoadFigures } = useContext(DataContext);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+   setLoadFigures([])
   }, []);
   useEffect(() => {
     updateArrayLike();
