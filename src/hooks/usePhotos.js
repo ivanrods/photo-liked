@@ -8,18 +8,18 @@ const usePhotos = (searchTerm = "") => {
   const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { setDataLike, dataLike, loadFigures, setLoadFigures } = useContext(DataContext);
+  const { setDataLike, dataLike, loadFigures, setLoadFigures } =
+    useContext(DataContext);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-   setLoadFigures([])
+    setLoadFigures([]);
   }, []);
   useEffect(() => {
     updateArrayLike();
   }, [loadFigures]);
 
   useEffect(() => {
-    
     setIsLoading(true);
     async function loadData() {
       try {
@@ -35,14 +35,17 @@ const usePhotos = (searchTerm = "") => {
         const data = await response.json();
         setLoadFigures((prevFigures) => {
           const newPhotos = data.photos.filter(
-            (photo) => !prevFigures.some((prevPhoto) => prevPhoto.id === photo.id)
+            (photo) =>
+              !prevFigures.some((prevPhoto) => prevPhoto.id === photo.id)
           );
-        
+
           return [
             ...prevFigures,
             ...newPhotos.map((photo) => {
               // Verifica se a foto está em dataLike para manter o like
-              const isLiked = dataLike.some((likedPhoto) => likedPhoto.id === photo.id);
+              const isLiked = dataLike.some(
+                (likedPhoto) => likedPhoto.id === photo.id
+              );
               return {
                 ...photo,
                 liked: isLiked || photo.liked || false,
@@ -110,7 +113,7 @@ const usePhotos = (searchTerm = "") => {
       prevFigures.map((photo) => {
         if (photo.id === photoId) {
           const updatedPhoto = { ...photo, liked: !photo.liked };
-  
+
           // Atualiza o dataLike
           setDataLike((prevData) => {
             const isAlreadyLiked = prevData.some((p) => p.id === photoId);
@@ -119,7 +122,12 @@ const usePhotos = (searchTerm = "") => {
             }
             return prevData.filter((p) => p.id !== photoId);
           });
-  
+
+          // Atualiza o selectedPhoto se for o mesmo da foto curtida
+          if (selectedPhoto?.id === photoId) {
+            setSelectedPhoto(updatedPhoto);
+          }
+
           return updatedPhoto;
         }
         return photo;
@@ -129,13 +137,13 @@ const usePhotos = (searchTerm = "") => {
 
   function toggleLikedFromFavorites(photoId) {
     setDataLike((prevData) => prevData.filter((photo) => photo.id !== photoId));
-  
+
     setLoadFigures((prevFigures) =>
       prevFigures.map((photo) =>
         photo.id === photoId ? { ...photo, liked: false } : photo
       )
     );
-  
+
     if (selectedPhoto?.id === photoId) {
       setSelectedPhoto((prevPhoto) => ({
         ...prevPhoto,
@@ -143,7 +151,7 @@ const usePhotos = (searchTerm = "") => {
       }));
     }
   }
-  
+
   return {
     loadFigures,
     isLoading,
@@ -155,7 +163,7 @@ const usePhotos = (searchTerm = "") => {
     toggleLiked,
     setLoadFigures,
     setSelectedPhoto,
-    toggleLikedFromFavorites
+    toggleLikedFromFavorites,
   };
 };
 
