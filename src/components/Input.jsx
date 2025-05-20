@@ -16,6 +16,7 @@ function Input({ showSearch, onClick, onKeyPress, onChange }) {
         type="text"
         placeholder="Search for images and collections"
         onChange={onChange}
+        maxLength={50}
       />
     </div>
   );
