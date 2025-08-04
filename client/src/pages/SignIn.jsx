@@ -20,17 +20,15 @@ function SignIn() {
   };
   return (
     <div className="h-screen">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-gray-100 w-full flex flex-col items-center justify-center h-full gap-8"
-      >
+      <main className="bg-gray-100 w-full flex flex-col items-center justify-center h-full gap-8">
         <Title title=" Bem vindo de volta" />
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <InputForm
             placeholder="Digite seu email"
             type="email"
             label="Email"
             id="email"
+            name="email"
             onChange={handleChange}
           />
 
@@ -38,16 +36,16 @@ function SignIn() {
             placeholder="Digite sua senha"
             type="password"
             label="Senha"
-            id="senha"
+            id="password"
+            name="password"
             onChange={handleChange}
           />
-          <Link to="/profile">
-            <Submit value="Entrar" />
-          </Link>
+
+          <Submit value="Entrar" />
         </Form>
 
         <Link to="/signUp">Não tem uma conta?</Link>
-      </form>
+      </main>
     </div>
   );
 }

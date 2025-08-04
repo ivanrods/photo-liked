@@ -1,6 +1,9 @@
-function Form({ children }) {
+function Form({ children, onSubmit }) {
   return (
-    <form className="w-11/12 md:max-w-xl flex flex-col bg-white px-8 py-8 gap-2 rounded-md ">
+    <form
+      onSubmit={onSubmit}
+      className="w-11/12 md:max-w-xl flex flex-col bg-white px-8 py-8 gap-2 rounded-md "
+    >
       {children}
     </form>
   );
