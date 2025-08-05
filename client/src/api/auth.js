@@ -1,7 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const registerUser = async (data) => {
-  const res = await fetch(`${API_URL}/api/auth/register`, {
+  const res = await fetch(`${API_URL}api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -10,7 +10,7 @@ export const registerUser = async (data) => {
 };
 
 export const loginUser = async (data) => {
-  const res = await fetch(`${API_URL}/api/auth/login`, {
+  const res = await fetch(`${API_URL}api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -23,4 +23,16 @@ export const loginUser = async (data) => {
     localStorage.setItem("user", JSON.stringify(json.user));
   }
   return json;
+};
+export const getUser = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}api/auth/profile`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.json();
 };
