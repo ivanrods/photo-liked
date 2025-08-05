@@ -6,6 +6,7 @@ import SignIn from "../pages/SignIn";
 import SignUp from "../pages/SignUp";
 
 import { Routes, Route } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
 
 function AppRoutes() {
   return (
@@ -13,10 +14,17 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/search" element={<Search />} />
       <Route path="/liked" element={<Liked />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        }
+      />
       <Route path="/signIn" element={<SignIn />} />
       <Route path="/signUp" element={<SignUp />} />
-      <Route path="*" element={<Home />} /> 
+      <Route path="*" element={<Home />} />
     </Routes>
   );
 }

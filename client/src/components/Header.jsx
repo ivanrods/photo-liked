@@ -19,15 +19,15 @@ function Header() {
       setInputValue(value);
     }
   };
-  
-  const verificarTecla = (evento) => { 
+
+  const verificarTecla = (evento) => {
     const value = evento.target.value.trim();
     if (evento.key === "Enter" && value) {
-       window.scrollTo({ top: 0, behavior: "smooth" });
-      setLoadMoreFig(9)
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setLoadMoreFig(9);
       setSearch(inputValue);
       navigate("/search");
-     setLoadFigures([])
+      setLoadFigures([]);
     }
   };
 
@@ -35,7 +35,6 @@ function Header() {
     setShowSearch(!showSearch);
   }
 
-  
   return (
     <header className="w-full fixed bg-white px-4 z-10">
       <div className="max-w-screen-xl mx-auto flex justify-center gap-8 h-16 items-center">
@@ -87,7 +86,7 @@ function Header() {
               ? "text-gray-800 font-semibold border-b-2 border-text-gray-800"
               : "text-gray-600 hover:text-gray-800"
           }
-          to="/signIn"
+          to="/profile"
         >
           <CgProfile className="text-3xl" />
         </NavLink>
