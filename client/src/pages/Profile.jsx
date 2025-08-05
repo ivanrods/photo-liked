@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
 import { CgProfile } from "react-icons/cg";
-import Form from "../components/Form";
 import { getUser, deleteUser } from "../api/auth";
 import { useEffect, useState } from "react";
 function Profile() {
@@ -41,53 +40,57 @@ function Profile() {
 
     const res = await deleteUser();
     alert(res.message || "Conta deletada");
-    handleLogout(); // faz logout automático após deletar
+    handleLogout();
   };
 
   return (
-    <div className="h-screen">
-      <main className="bg-gray-100 w-full flex flex-col items-center justify-center h-full gap-8">
-        <CgProfile className="text-8xl" />
-        <Form onSubmit={handleSubmit}>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-100 px-4">
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 space-y-6">
+        <div className="flex flex-col items-center gap-2">
+          <CgProfile className="text-8xl text-black" />
+          <h2 className="text-2xl font-bold text-gray-700">Meu Perfil</h2>
+        </div>
+
+        <form onSubmit={handleSubmit}>
           <InputForm
-            placeholder="Nome"
+            label="Nome"
+            placeholder="Seu nome"
             type="text"
             id="name"
-            label="Nome"
+            name="name"
             value={form.name}
             onChange={handleChange}
-            name="name"
           />
+
           <InputForm
-            placeholder="user@email.com"
+            label="Email"
+            placeholder="Seu email"
             type="email"
             id="email"
-            label="Email"
+            name="email"
             value={form.email}
             onChange={handleChange}
-            name="email"
           />
-
-          <Submit value="Salvar" />
-          <div className="flex gap-4">
-            <button
+          <div className="flex flex-col gap-2">
+            <Submit value="Salvar" type={"submit"} />
+            <Submit
+              value=" Deletar Conta"
+              type={"button"}
               onClick={handleDeleteAccount}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-            >
-              Deletar Conta
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
-            >
-              Sair
-            </button>
+            />
+            <Submit value=" Sair" type={"button"} onClick={handleLogout} />
           </div>
-        </Form>
+        </form>
 
-        <Link to={-1}> Voltar </Link>
-      </main>
+        <div className="text-center mt-2">
+          <Link
+            to={-1}
+            className="text-blue-600 hover:underline text-sm font-medium"
+          >
+            ← Voltar
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

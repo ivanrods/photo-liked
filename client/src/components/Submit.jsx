@@ -1,12 +1,12 @@
-function Submit({ value, onClick }) {
+function Submit({ value, onClick, type }) {
   return (
     <button
       onClick={onClick}
-      className="flex justify-center aline-center bg-black text-white py-3 rounded-md cursor-pointer mt-6 w-full 
-      max-w-2xl mx-auto"
-      type="submit"
-     
-    >{value}</button>
+      type={type}
+      className="w-full max-w-2xl mx-auto bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+    >
+      {value}
+    </button>
   );
 }
 export default Submit;
