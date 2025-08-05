@@ -49,15 +49,25 @@ function Profile() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-100 px-4">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 space-y-6">
         <div className="flex flex-col items-center gap-2">
+          <h2 className="text-2xl font-bold text-gray-700">Meu Perfil</h2>
           <img
             src={avatar}
             alt="Avatar"
             className="w-24 h-24 rounded-full border shadow"
           />
-          <h2 className="text-2xl font-bold text-gray-700">Meu Perfil</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
+          <InputForm
+            label="Nome"
+            placeholder="Seu nome"
+            type="text"
+            id="name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+          />
+
           <InputForm
             label="Email"
             placeholder="Seu email"

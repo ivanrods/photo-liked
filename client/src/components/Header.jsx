@@ -12,6 +12,8 @@ function Header() {
   const [inputValue, setInputValue] = useState("");
 
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
 
   const handleInputChange = (event) => {
     const value = event.target.value.trim();
@@ -88,7 +90,14 @@ function Header() {
           }
           to="/profile"
         >
-          <CgProfile className="text-3xl" />
+          {user && (
+            <img
+              src={user.avatar}
+              alt="Avatar"
+              className="w-8 h-8 rounded-full border shadow z-50"
+            />
+          )}
+          {!user && <CgProfile className="text-3xl" />}
         </NavLink>
       </div>
     </header>

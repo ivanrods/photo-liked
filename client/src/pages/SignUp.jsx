@@ -37,8 +37,8 @@ function SignUp() {
               placeholder="Digite seu nome"
               type="text"
               label="Nome"
-              id="nome"
-              name="nome"
+              id="name"
+              name="name"
               onChange={handleChange}
             />
             <InputForm
