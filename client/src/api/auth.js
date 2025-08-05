@@ -36,3 +36,21 @@ export const getUser = async () => {
 
   return res.json();
 };
+
+export const deleteUser = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}api/auth/delete`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (res.ok) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
+
+  return res.json();
+};

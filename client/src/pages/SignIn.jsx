@@ -1,5 +1,5 @@
 import { loginUser } from "../api/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
 import Title from "../components/Title";
@@ -8,7 +8,7 @@ import { useState } from "react";
 
 function SignIn() {
   const [form, setForm] = useState({ email: "", password: "" });
-
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -17,6 +17,7 @@ function SignIn() {
     e.preventDefault();
     const res = await loginUser(form);
     alert(res.token ? "Login bem-sucedido!" : res.error);
+    navigate("/profile");
   };
   return (
     <div className="h-screen">

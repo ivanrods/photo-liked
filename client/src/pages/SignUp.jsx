@@ -1,11 +1,12 @@
 import { registerUser } from "../api/auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
 import Title from "../components/Title";
 import Form from "../components/Form";
 import { useState } from "react";
 function SignUp() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
   const handleChange = (e) => {
@@ -16,6 +17,7 @@ function SignUp() {
     e.preventDefault();
     const res = await registerUser(form);
     alert(res.message || res.error);
+    navigate("/signIn");
   };
   return (
     <div className="h-screen">
