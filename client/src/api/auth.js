@@ -37,6 +37,27 @@ export const getUser = async () => {
   return res.json();
 };
 
+export const updateUser = async (data) => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}api/auth/update`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  const json = await res.json();
+
+  if (json.user) {
+    localStorage.setItem("user", JSON.stringify(json.user));
+  }
+
+  return json;
+};
+
 export const deleteUser = async () => {
   const token = localStorage.getItem("token");
 

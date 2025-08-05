@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
-import { getUser, deleteUser } from "../api/auth";
+import { getUser, deleteUser, updateUser } from "../api/auth";
 import { useEffect, useState } from "react";
 function Profile() {
   const [form, setForm] = useState({ name: "", email: "" });
@@ -23,9 +23,10 @@ function Profile() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Salvo! (funcionalidade de update ainda não implementada)");
+    const res = await updateUser(form);
+    alert(res.message || "Atualizado!");
   };
 
   const navigate = useNavigate();
