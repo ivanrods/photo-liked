@@ -64,7 +64,7 @@ function SignUp() {
           <div className="text-center">
             <Link
               to="/signIn"
-              className="text-blue-600 hover:underline text-sm font-medium"
+              className="text-gray-600 hover:underline text-sm font-medium"
             >
               Já tem uma conta? Entrar
             </Link>

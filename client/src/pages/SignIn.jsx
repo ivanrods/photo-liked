@@ -57,7 +57,7 @@ function SignIn() {
           <div className="text-center">
             <Link
               to="/signUp"
-              className="text-blue-600 hover:underline text-sm font-medium"
+              className="text-gray-600 hover:underline text-sm font-medium"
             >
               Não tem uma conta? Criar agora
             </Link>

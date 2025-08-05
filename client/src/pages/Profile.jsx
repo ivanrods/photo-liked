@@ -92,7 +92,7 @@ function Profile() {
         <div className="text-center mt-2">
           <Link
             to={-1}
-            className="text-blue-600 hover:underline text-sm font-medium"
+            className="text-gray-600 hover:underline text-sm font-medium"
           >
             ← Voltar
           </Link>

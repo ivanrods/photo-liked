@@ -13,7 +13,6 @@ function Header() {
 
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
 
   const handleInputChange = (event) => {
     const value = event.target.value.trim();
