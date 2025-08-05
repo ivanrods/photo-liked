@@ -4,9 +4,17 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   const { name, email, password, avatar } = req.body;
+  const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${encodeURIComponent(
+    name
+  )}`;
   try {
     const hash = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hash, avatar: "" });
+    const user = await User.create({
+      name,
+      email,
+      password: hash,
+      avatar: avatarUrl,
+    });
     res.status(201).json({ message: "Usuário criado com sucesso" });
   } catch (err) {
     res.status(400).json({ error: "Erro ao registrar. E-mail já existe?" });

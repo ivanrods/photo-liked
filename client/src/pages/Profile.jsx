@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
-import { CgProfile } from "react-icons/cg";
 import { getUser, deleteUser } from "../api/auth";
 import { useEffect, useState } from "react";
 function Profile() {
   const [form, setForm] = useState({ name: "", email: "" });
+  const [avatar, setAvatar] = useState("");
+
   useEffect(() => {
     const fetchProfile = async () => {
       const user = await getUser();
@@ -13,6 +14,7 @@ function Profile() {
         name: user.name || "",
         email: user.email || "",
       });
+      setAvatar(user.avatar);
     };
 
     fetchProfile();
@@ -31,7 +33,7 @@ function Profile() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/signIn"); // ou o caminho da sua página de login
+    navigate("/signIn");
   };
 
   const handleDeleteAccount = async () => {
@@ -47,21 +49,15 @@ function Profile() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-100 px-4">
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 space-y-6">
         <div className="flex flex-col items-center gap-2">
-          <CgProfile className="text-8xl text-black" />
+          <img
+            src={avatar}
+            alt="Avatar"
+            className="w-24 h-24 rounded-full border shadow"
+          />
           <h2 className="text-2xl font-bold text-gray-700">Meu Perfil</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <InputForm
-            label="Nome"
-            placeholder="Seu nome"
-            type="text"
-            id="name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-          />
-
           <InputForm
             label="Email"
             placeholder="Seu email"

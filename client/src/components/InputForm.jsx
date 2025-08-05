@@ -1,4 +1,4 @@
-function InputForm({ placeholder, type, label, id, onChange, value }) {
+function InputForm({ placeholder, type, label, id, onChange, value, name }) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm font-medium text-gray-700">
@@ -6,7 +6,7 @@ function InputForm({ placeholder, type, label, id, onChange, value }) {
       </label>
       <input
         id={id}
-        name={id}
+        name={name}
         type={type}
         placeholder={placeholder}
         value={value}
