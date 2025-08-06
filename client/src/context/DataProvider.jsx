@@ -1,18 +1,32 @@
 import { createContext, useState, useEffect } from "react";
+import { saveLikes } from "../api/auth";
 // eslint-disable-next-line react-refresh/only-export-components
 export const DataContext = createContext();
 
 function DataProvider({ children }) {
-
   const [dataLike, setDataLike] = useState(() => {
     const savedData = localStorage.getItem("like");
-    return savedData ? JSON.parse(savedData) : []; 
+    return savedData ? JSON.parse(savedData) : [];
   });
 
   useEffect(() => {
-    if (dataLike.length >= 0) {
-      localStorage.setItem("like", JSON.stringify(dataLike));
-    }
+    const saveLikesData = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          await saveLikes(dataLike);
+        } catch (error) {
+          console.error("Erro ao salvar likes no banco:", error);
+          // Se der erro, salva localmente como fallback
+          localStorage.setItem("like", JSON.stringify(dataLike));
+        }
+      } else {
+        if (dataLike.length >= 0) {
+          localStorage.setItem("like", JSON.stringify(dataLike));
+        }
+      }
+    };
+    saveLikesData();
   }, [dataLike]);
 
   const [search, setSearch] = useState("");
@@ -27,8 +41,8 @@ function DataProvider({ children }) {
         setSearch,
         loadMoreFig,
         setLoadMoreFig,
-        loadFigures, 
-        setLoadFigures
+        loadFigures,
+        setLoadFigures,
       }}
     >
       {children}

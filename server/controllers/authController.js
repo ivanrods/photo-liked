@@ -31,7 +31,7 @@ exports.login = async (req, res) => {
     if (!valid) return res.status(401).json({ error: "Senha incorreta" });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "7d",
     });
 
     res.json({
@@ -97,5 +97,20 @@ exports.deleteUser = async (req, res) => {
     res.status(200).json({ message: "Usuário deletado com sucesso" });
   } catch (error) {
     res.status(500).json({ error: "Erro ao deletar usuário" });
+  }
+};
+
+exports.updateLikes = async (req, res) => {
+  const { likes } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { likes },
+      { new: true }
+    );
+
+    res.json({ message: "Likes atualizados com sucesso", likes: user.likes });
+  } catch (err) {
+    res.status(401).json({ error: "Token inválido" });
   }
 };
