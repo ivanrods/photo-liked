@@ -1,39 +1,26 @@
 import { useState, useEffect, useContext } from "react";
 import { DataContext } from "../context/DataProvider";
+import { fetchPhotos } from "../api/pexels";
+import { useInfiniteScroll } from "./usePhotoLoader";
+import { useLikes } from "./useLikes";
 
 const usePhotos = (searchTerm = "") => {
-  const accessKey = import.meta.env.VITE_PEXELS_API_KEY;
+  const { loadFigures, setLoadFigures, loadMoreFig, setLoadMoreFig, dataLike } =
+    useContext(DataContext);
 
-  const [toggleFigure, setToggleFigure] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [toggleFigure, setToggleFigure] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    setDataLike,
-    dataLike,
-    loadFigures,
-    setLoadFigures,
-    loadMoreFig,
-    setLoadMoreFig,
-  } = useContext(DataContext);
+  const { handleToggleLike, removeLikeFromFavorites } = useLikes();
 
-  const token = localStorage.getItem("token");
-
-  // Carrega as fotos da API
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const url = searchTerm
-          ? `https://api.pexels.com/v1/search?query=${searchTerm}&per_page=${loadMoreFig}`
-          : `https://api.pexels.com/v1/curated?per_page=${loadMoreFig}`;
+        const photos = await fetchPhotos(searchTerm, loadMoreFig);
 
-        const response = await fetch(url, {
-          headers: { Authorization: accessKey },
-        });
-
-        const data = await response.json();
-        const newPhotos = data.photos.filter(
+        const newPhotos = photos.filter(
           (photo) => !loadFigures.some((p) => p.id === photo.id)
         );
 
@@ -44,100 +31,35 @@ const usePhotos = (searchTerm = "") => {
 
         setLoadFigures((prev) => [...prev, ...updatedPhotos]);
       } catch (error) {
-        console.error("Erro ao buscar fotos", error);
+        console.error("Erro ao buscar fotos:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
     loadData();
-  }, [loadMoreFig, searchTerm]);
+  }, [searchTerm, loadMoreFig]);
 
-  // Infinite scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.scrollHeight - 10
-      ) {
-        setLoadMoreFig((prev) => prev + 6);
-      }
-    };
+  useInfiniteScroll(() => setLoadMoreFig((prev) => prev + 6));
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Modal
-  function handleFigureClick(photo) {
+  const handleFigureClick = (photo) => {
     setSelectedPhoto(photo);
     setToggleFigure(true);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setToggleFigure(false);
-  }
-
-  // Curtir / Descurtir
-  function toggleLiked(photoId) {
-    if (!token) {
-      alert("Você precisa estar logado para curtir imagens.");
-      return;
-    }
-
-    setLoadFigures((prevFigures) =>
-      prevFigures.map((photo) => {
-        if (photo.id === photoId) {
-          const liked = !photo.liked;
-          const updatedPhoto = { ...photo, liked };
-
-          setDataLike((prevData) => {
-            const alreadyExists = prevData.some((p) => p.id === photoId);
-
-            if (liked && !alreadyExists) {
-              return [...prevData, updatedPhoto];
-            } else if (!liked && alreadyExists) {
-              return prevData.filter((p) => p.id !== photoId);
-            }
-
-            return prevData; // Nenhuma alteração se o estado não mudou
-          });
-
-          if (selectedPhoto?.id === photoId) {
-            setSelectedPhoto(updatedPhoto);
-          }
-
-          return updatedPhoto;
-        }
-
-        return photo;
-      })
-    );
-  }
-
-  function toggleLikedFromFavorites(photoId) {
-    setDataLike((prevData) => prevData.filter((photo) => photo.id !== photoId));
-    setLoadFigures((prevFigures) =>
-      prevFigures.map((photo) =>
-        photo.id === photoId ? { ...photo, liked: false } : photo
-      )
-    );
-
-    if (selectedPhoto?.id === photoId) {
-      setSelectedPhoto((prev) => ({ ...prev, liked: false }));
-    }
-  }
+  };
 
   return {
     loadFigures,
     isLoading,
-    loadMore: () => setLoadMoreFig((prev) => prev + 6),
     selectedPhoto,
     toggleFigure,
     handleFigureClick,
     closeModal,
-    toggleLiked,
-    toggleLikedFromFavorites,
+    handleToggleLike,
+    removeLikeFromFavorites,
     setSelectedPhoto,
     setLoadFigures,
   };

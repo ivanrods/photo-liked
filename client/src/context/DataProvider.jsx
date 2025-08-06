@@ -1,6 +1,6 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import { saveLikes, getLikes } from "../api/auth";
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const DataContext = createContext();
 
 function DataProvider({ children }) {
@@ -10,6 +10,7 @@ function DataProvider({ children }) {
   const [loadFigures, setLoadFigures] = useState([]);
 
   const token = localStorage.getItem("token");
+  const didFetchLikes = useRef(false); // <- flag de controle
 
   // Carrega os likes do backend
   useEffect(() => {
@@ -19,6 +20,7 @@ function DataProvider({ children }) {
       try {
         const likesFromDB = await getLikes();
         setDataLike(likesFromDB);
+        didFetchLikes.current = true; // <- marca como carregado
       } catch (err) {
         console.error("Erro ao buscar likes do banco:", err);
       }
@@ -27,10 +29,10 @@ function DataProvider({ children }) {
     loadLikes();
   }, [token]);
 
-  // Salva os likes no backend
+  // Salva os likes no backend (mas só depois de carregar os dados)
   useEffect(() => {
     const saveLikesData = async () => {
-      if (!token) return;
+      if (!token || !didFetchLikes.current) return;
 
       try {
         await saveLikes(dataLike);
@@ -39,8 +41,9 @@ function DataProvider({ children }) {
       }
     };
 
-    if (dataLike.length >= 0) saveLikesData();
+    saveLikesData();
   }, [dataLike, token]);
+
   return (
     <DataContext.Provider
       value={{
@@ -58,4 +61,5 @@ function DataProvider({ children }) {
     </DataContext.Provider>
   );
 }
+
 export default DataProvider;

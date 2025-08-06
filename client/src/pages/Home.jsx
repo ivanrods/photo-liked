@@ -4,6 +4,7 @@ import Title from "../components/Title";
 import Loader from "../components/Loader";
 
 import usePhotos from "../hooks/usePhotos";
+import { useLikes } from "../hooks/useLikes";
 
 function Home() {
   const {
@@ -13,8 +14,9 @@ function Home() {
     toggleFigure,
     handleFigureClick,
     closeModal,
-    toggleLiked,
   } = usePhotos();
+  const { handleToggleLike } = useLikes();
+
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       {loadFigures.length > 0 && (
@@ -30,7 +32,7 @@ function Home() {
                 key={photo.id}
                 like={photo.liked}
                 onClick={() => handleFigureClick(photo)}
-                onLike={() => toggleLiked(photo.id)}
+                onLike={() => handleToggleLike(photo.id)}
               />
             ))}
           </section>
@@ -41,7 +43,7 @@ function Home() {
               alt={selectedPhoto.alt}
               like={selectedPhoto.liked}
               onClick={closeModal}
-              onLike={() => toggleLiked(selectedPhoto.id)}
+              onLike={() => handleToggleLike(selectedPhoto.id)}
             />
           )}
         </div>
