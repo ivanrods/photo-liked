@@ -114,3 +114,12 @@ exports.updateLikes = async (req, res) => {
     res.status(401).json({ error: "Token inválido" });
   }
 };
+
+exports.getLikes = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    res.json({ likes: user.likes || [] });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao buscar likes" });
+  }
+};
