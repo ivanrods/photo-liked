@@ -39,7 +39,7 @@ function DataProvider({ children }) {
       }
     };
 
-    if (dataLike.length > 0) saveLikesData();
+    if (dataLike.length >= 0) saveLikesData();
   }, [dataLike, token]);
   return (
     <DataContext.Provider

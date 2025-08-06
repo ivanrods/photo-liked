@@ -92,10 +92,15 @@ const usePhotos = (searchTerm = "") => {
           const updatedPhoto = { ...photo, liked };
 
           setDataLike((prevData) => {
-            if (liked) {
+            const alreadyExists = prevData.some((p) => p.id === photoId);
+
+            if (liked && !alreadyExists) {
               return [...prevData, updatedPhoto];
+            } else if (!liked && alreadyExists) {
+              return prevData.filter((p) => p.id !== photoId);
             }
-            return prevData.filter((p) => p.id !== photoId);
+
+            return prevData; // Nenhuma alteração se o estado não mudou
           });
 
           if (selectedPhoto?.id === photoId) {
@@ -104,6 +109,7 @@ const usePhotos = (searchTerm = "") => {
 
           return updatedPhoto;
         }
+
         return photo;
       })
     );
