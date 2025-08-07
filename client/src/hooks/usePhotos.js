@@ -3,6 +3,7 @@ import { DataContext } from "../context/DataProvider";
 import { fetchPhotos } from "../api/pexels";
 import { useInfiniteScroll } from "./usePhotoLoader";
 import { useLikes } from "./useLikes";
+import { getLikes } from "../api/auth";
 
 const usePhotos = (searchTerm = "") => {
   const { loadFigures, setLoadFigures, loadMoreFig, setLoadMoreFig, dataLike } =
@@ -19,15 +20,12 @@ const usePhotos = (searchTerm = "") => {
       setIsLoading(true);
       try {
         const photos = await fetchPhotos(searchTerm, loadMoreFig);
+        const likedPhotos = await getLikes();
 
-        const newPhotos = photos.filter(
-          (photo) => !loadFigures.some((p) => p.id === photo.id)
-        );
-
-        const updatedPhotos = newPhotos.map((photo) => ({
-          ...photo,
-          liked: dataLike.some((liked) => liked.id === photo.id),
-        }));
+        const updatedPhotos = photos.map((photo) => {
+          const isLiked = likedPhotos.some((liked) => liked.id === photo.id);
+          return { ...photo, liked: isLiked };
+        });
 
         setLoadFigures((prev) => [...prev, ...updatedPhotos]);
       } catch (error) {
@@ -38,7 +36,7 @@ const usePhotos = (searchTerm = "") => {
     };
 
     loadData();
-  }, [searchTerm, loadMoreFig]);
+  }, [searchTerm, loadMoreFig, dataLike]);
 
   useInfiniteScroll(() => setLoadMoreFig((prev) => prev + 6));
 

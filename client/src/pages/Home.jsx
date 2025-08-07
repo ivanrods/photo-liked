@@ -38,6 +38,7 @@ function Home() {
           </section>
           {toggleFigure && (
             <Modal
+              key={selectedPhoto.id}
               src={selectedPhoto.src.large}
               description={selectedPhoto.alt}
               alt={selectedPhoto.alt}
