@@ -8,7 +8,7 @@ function Figure({ onClick, src, alt, description, like, mod, onLike }) {
   useEffect(() => {
     if (imgRef.current && mod) {
       const handleLoad = () => {
-        setImgWidth(imgRef.current.offsetWidth);  
+        setImgWidth(imgRef.current.offsetWidth);
       };
 
       const imgEl = imgRef.current;
@@ -20,7 +20,6 @@ function Figure({ onClick, src, alt, description, like, mod, onLike }) {
         imgEl.removeEventListener("load", handleLoad);
       };
     }
-    
   }, [mod]);
 
   return (
@@ -66,7 +65,9 @@ function Figure({ onClick, src, alt, description, like, mod, onLike }) {
           <span className="bg-gray-200 px-2 rounded-md">Photo</span>
           <FaHeart
             onClick={onLike}
-            className={`text-xl ${like ? "text-gray-600" : "text-gray-300"}`}
+            className={`text-xl ${
+              like ? "text-gray-600" : "text-gray-300"
+            } cursor-pointer`}
           />
         </div>
       </article>

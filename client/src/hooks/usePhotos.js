@@ -36,7 +36,17 @@ const usePhotos = (searchTerm = "") => {
     };
 
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, loadMoreFig, dataLike]);
+  // No final do usePhotos
+  useEffect(() => {
+    if (selectedPhoto) {
+      const updated = loadFigures.find((p) => p.id === selectedPhoto.id);
+      if (updated && updated.liked !== selectedPhoto.liked) {
+        setSelectedPhoto(updated);
+      }
+    }
+  }, [loadFigures]);
 
   useInfiniteScroll(() => setLoadMoreFig((prev) => prev + 6));
 

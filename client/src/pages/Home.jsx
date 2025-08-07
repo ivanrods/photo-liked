@@ -4,7 +4,6 @@ import Title from "../components/Title";
 import Loader from "../components/Loader";
 
 import usePhotos from "../hooks/usePhotos";
-import { useLikes } from "../hooks/useLikes";
 
 function Home() {
   const {
@@ -14,8 +13,8 @@ function Home() {
     toggleFigure,
     handleFigureClick,
     closeModal,
+    handleToggleLike,
   } = usePhotos();
-  const { handleToggleLike } = useLikes();
 
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
@@ -24,21 +23,25 @@ function Home() {
           <Title title="Home" />
 
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {loadFigures.map((photo) => (
-              <Figure
-                src={photo.src.large}
-                description={photo.alt}
-                alt={photo.alt}
-                key={photo.id}
-                like={photo.liked}
-                onClick={() => handleFigureClick(photo)}
-                onLike={() => handleToggleLike(photo.id)}
-              />
-            ))}
+            {loadFigures
+              .filter(
+                (photo, index, self) =>
+                  index === self.findIndex((p) => p.id === photo.id)
+              )
+              .map((photo) => (
+                <Figure
+                  src={photo.src.large}
+                  description={photo.alt}
+                  alt={photo.alt}
+                  key={photo.id}
+                  like={photo.liked}
+                  onClick={() => handleFigureClick(photo)}
+                  onLike={() => handleToggleLike(photo.id)}
+                />
+              ))}
           </section>
           {toggleFigure && (
             <Modal
-              key={selectedPhoto.id}
               src={selectedPhoto.src.large}
               description={selectedPhoto.alt}
               alt={selectedPhoto.alt}
