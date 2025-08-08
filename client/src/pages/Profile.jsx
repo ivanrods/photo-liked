@@ -44,7 +44,7 @@ function Profile() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/signIn");
+    navigate("/login");
   };
 
   const handleDeleteAccount = async () => {
@@ -64,7 +64,7 @@ function Profile() {
           <img
             src={avatar}
             alt="Avatar"
-            className="w-24 h-24 rounded-full border shadow"
+            className="w-24 h-24 rounded-full border shadow "
           />
         </div>
 

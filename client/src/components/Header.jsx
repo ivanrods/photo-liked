@@ -93,7 +93,7 @@ function Header() {
             <img
               src={user.avatar}
               alt="Avatar"
-              className="w-8 h-8 rounded-full border shadow z-50"
+              className="w-8 h-8 rounded-full object-cover mb-1"
             />
           )}
           {!user && <CgProfile className="text-3xl" />}

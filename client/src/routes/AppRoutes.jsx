@@ -2,8 +2,8 @@ import Profile from "../pages/Profile";
 import Home from "../pages/Home";
 import Search from "../pages/Search";
 import Liked from "../pages/Liked";
-import SignIn from "../pages/SignIn";
-import SignUp from "../pages/SignUp";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
 
 import { Routes, Route } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
@@ -22,8 +22,8 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
-      <Route path="/signIn" element={<SignIn />} />
-      <Route path="/signUp" element={<SignUp />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="*" element={<Home />} />
     </Routes>
   );
