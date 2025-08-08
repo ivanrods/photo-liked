@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../schemas/registerSchema";
 import { FaCamera } from "react-icons/fa";
+import { toast } from "sonner";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -21,10 +22,10 @@ function SignUp() {
   const onSubmit = async (data) => {
     try {
       await registerUser(data);
-      alert("Registro bem-sucedido!");
+      toast.success("Registro bem-sucedido!");
       navigate("/signIn");
     } catch (error) {
-      alert("Erro ao registrar: " + error.message);
+      toast.error("Erro ao registrar: " + error.message);
     }
   };
 
@@ -41,7 +42,7 @@ function SignUp() {
 
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center gap-6">
           <div className="flex flex-col justify-center items-center gap-4">
-            <FaCamera className="text-3xl text-gray-600" />
+            <FaCamera className="text-5xl text-gray-600" />
 
             <h2 className="text-2xl font-bold text-gray-700">Crie sua conta</h2>
           </div>

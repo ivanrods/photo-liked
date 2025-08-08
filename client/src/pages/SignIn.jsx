@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas/loginSchema";
 import { FaCamera } from "react-icons/fa";
+import { toast } from "sonner";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -21,10 +22,10 @@ function SignIn() {
   const onSubmit = async (data) => {
     try {
       await loginUser(data);
-      alert("Login bem-sucedido!");
+      toast.success("Login bem-sucedido!");
       navigate("/profile");
     } catch (error) {
-      alert("Erro ao fazer login: " + error.message);
+      toast.error("Erro ao fazer login: " + error.message);
     }
   };
   return (
@@ -40,7 +41,7 @@ function SignIn() {
 
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center gap-6">
           <div className="flex flex-col justify-center items-center gap-4">
-            <FaCamera className="text-3xl text-gray-600" />
+            <FaCamera className="text-5xl text-gray-600" />
             <h2 className="text-2xl font-bold text-gray-700">
               Entre na sua conta
             </h2>

@@ -6,6 +6,8 @@ import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
 import { getUser, deleteUser, updateUser } from "../api/auth";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
 function Profile() {
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState("");
@@ -33,9 +35,9 @@ function Profile() {
   const onSubmit = async (data) => {
     try {
       await updateUser(data);
-      alert("Atualizado!");
+      toast.success("Perfil atualizado!");
     } catch (error) {
-      alert("Erro ao atualizar " + error.message);
+      toast.error("Erro ao atualizar " + error.message);
     }
   };
 
@@ -50,7 +52,7 @@ function Profile() {
     if (!confirm) return;
 
     const res = await deleteUser();
-    alert(res.message || "Conta deletada");
+    toast.success(res.message || "Conta deletada");
     handleLogout();
   };
 
