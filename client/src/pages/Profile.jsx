@@ -31,8 +31,12 @@ function Profile() {
   }, [setValue]);
 
   const onSubmit = async (data) => {
-    const res = await updateUser(data);
-    alert(res.message || "Atualizado!");
+    try {
+      await updateUser(data);
+      alert("Atualizado!");
+    } catch (error) {
+      alert("Erro ao atualizar " + error.message);
+    }
   };
 
   const handleLogout = () => {

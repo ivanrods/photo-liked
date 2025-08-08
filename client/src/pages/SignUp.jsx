@@ -2,10 +2,10 @@ import { registerUser } from "../api/auth";
 import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
-import Title from "../components/Title";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../schemas/registerSchema";
+import { FaCamera } from "react-icons/fa";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -33,14 +33,18 @@ function SignUp() {
       <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
         <div className="hidden md:block md:w-1/2">
           <img
-            src="https://cdn.pixabay.com/photo/2022/10/04/11/47/glass-front-7498002_960_720.jpg"
+            src="wallpaper.jpg"
             alt="Imagem de registro"
             className="h-full w-full object-cover"
           />
         </div>
 
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center gap-6">
-          <Title title="Crie sua conta" />
+          <div className="flex flex-col justify-center items-center gap-4">
+            <FaCamera className="text-3xl text-gray-600" />
+
+            <h2 className="text-2xl font-bold text-gray-700">Crie sua conta</h2>
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <InputForm

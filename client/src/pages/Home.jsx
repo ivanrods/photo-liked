@@ -1,6 +1,5 @@
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
-import Title from "../components/Title";
 import Loader from "../components/Loader";
 
 import usePhotos from "../hooks/usePhotos";
@@ -20,8 +19,7 @@ function Home() {
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       {loadFigures.length > 0 && (
         <div className="max-w-screen-xl justify-center mx-auto ">
-          <Title title="Home" />
-
+          <h2 className="text-2xl font-bold text-gray-700 mt-10 mb-6">Home</h2>
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loadFigures
               .filter(

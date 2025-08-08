@@ -1,6 +1,5 @@
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
-import Title from "../components/Title";
 import Loader from "../components/Loader";
 
 import usePhotos from "../hooks/usePhotos";
@@ -23,11 +22,13 @@ function Search() {
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
         {loadFigures.length > 0 ? (
-          <Title title={`Results for: "${search}"`} />
+          <h2 className="text-2xl font-bold text-gray-700 mt-10 mb-6">
+            Resultados para: {search}
+          </h2>
         ) : (
-          <Title
-            title={`Oops, We couldn't find any results for : "${search}" `}
-          />
+          <h2 className="text-2xl font-bold text-gray-700 mt-10 mb-6">
+            Ops, não conseguimos encontrar nenhum resultado para: {search}
+          </h2>
         )}
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
