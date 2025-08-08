@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useRef } from "react";
-import { saveLikes, getLikes } from "../api/auth";
+
+import { getLikes, saveLikes } from "../api/likes";
 
 export const DataContext = createContext();
 

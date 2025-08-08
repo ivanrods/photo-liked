@@ -3,7 +3,7 @@ import { DataContext } from "../context/DataProvider";
 import { fetchPhotos } from "../api/pexels";
 import { useInfiniteScroll } from "./usePhotoLoader";
 import { useLikes } from "./useLikes";
-import { getLikes } from "../api/auth";
+import { getLikes } from "../api/likes";
 
 const usePhotos = (searchTerm = "") => {
   const { loadFigures, setLoadFigures, loadMoreFig, setLoadMoreFig, dataLike } =
