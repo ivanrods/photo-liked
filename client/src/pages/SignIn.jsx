@@ -3,20 +3,25 @@ import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
 import Title from "../components/Title";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "../schemas/loginSchema";
 
 function SignIn() {
-  const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await loginUser(form);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data) => {
+    const res = await loginUser(data);
     alert(res.token ? "Login bem-sucedido!" : res.error);
-    navigate("/profile");
+    if (res.token) navigate("/profile");
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-100 px-4">
@@ -32,25 +37,24 @@ function SignIn() {
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center gap-6">
           <Title title="Bem-vindo de volta" />
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <InputForm
+              register={register} // PASSANDO O REGISTER AQUI
+              name="email"
+              label="Email"
               placeholder="Digite seu email"
               type="email"
-              label="Email"
-              id="email"
-              name="email"
-              onChange={handleChange}
+              errors={errors}
             />
 
             <InputForm
+              register={register}
+              name="password"
+              label="Senha"
               placeholder="Digite sua senha"
               type="password"
-              label="Senha"
-              id="password"
-              name="password"
-              onChange={handleChange}
+              errors={errors}
             />
-
             <Submit type={"submit"} value="Entrar" />
           </form>
 

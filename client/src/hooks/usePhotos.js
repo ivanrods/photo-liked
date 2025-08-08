@@ -20,7 +20,12 @@ const usePhotos = (searchTerm = "") => {
       setIsLoading(true);
       try {
         const photos = await fetchPhotos(searchTerm, loadMoreFig);
-        const likedPhotos = await getLikes();
+        let likedPhotos = [];
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          likedPhotos = await getLikes(); // só chama se tiver token
+        }
 
         const updatedPhotos = photos.map((photo) => {
           const isLiked = likedPhotos.some((liked) => liked.id === photo.id);
@@ -46,6 +51,7 @@ const usePhotos = (searchTerm = "") => {
         setSelectedPhoto(updated);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadFigures]);
 
   useInfiniteScroll(() => setLoadMoreFig((prev) => prev + 6));
