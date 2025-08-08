@@ -1,35 +1,39 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { profileSchema } from "../schemas/profileSchema";
 import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
 import { getUser, deleteUser, updateUser } from "../api/auth";
 import { useEffect, useState } from "react";
 function Profile() {
-  const [form, setForm] = useState({ name: "", email: "" });
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(profileSchema),
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
       const user = await getUser();
-      setForm({
-        name: user.name || "",
-        email: user.email || "",
-      });
+      setValue("name", user.name || "");
+      setValue("email", user.email || "");
       setAvatar(user.avatar);
     };
 
     fetchProfile();
-  }, []);
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  }, [setValue]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await updateUser(form);
+  const onSubmit = async (data) => {
+    const res = await updateUser(data);
     alert(res.message || "Atualizado!");
   };
-
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -58,25 +62,23 @@ function Profile() {
           />
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <InputForm
+            register={register}
+            name="name"
             label="Nome"
             placeholder="Seu nome"
             type="text"
-            id="name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
+            errors={errors}
           />
 
           <InputForm
+            register={register}
+            name="email"
             label="Email"
             placeholder="Seu email"
             type="email"
-            id="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
+            errors={errors}
           />
           <div className="flex flex-col gap-2">
             <Submit value="Salvar" type={"submit"} />

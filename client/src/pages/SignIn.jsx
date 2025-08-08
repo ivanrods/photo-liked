@@ -19,9 +19,13 @@ function SignIn() {
   });
 
   const onSubmit = async (data) => {
-    const res = await loginUser(data);
-    alert(res.token ? "Login bem-sucedido!" : res.error);
-    if (res.token) navigate("/profile");
+    try {
+      await loginUser(data);
+      alert("Login bem-sucedido!");
+      navigate("/profile");
+    } catch (error) {
+      alert("Erro ao fazer login: " + error.message);
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-100 px-4">

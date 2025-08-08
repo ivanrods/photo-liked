@@ -19,9 +19,13 @@ function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    const res = await registerUser(data);
-    alert(res.token ? "Registro bem-sucedido!" : res.error);
-    if (res.token) navigate("/signIn");
+    try {
+      await registerUser(data);
+      alert("Registro bem-sucedido!");
+      navigate("/signIn");
+    } catch (error) {
+      alert("Erro ao registrar: " + error.message);
+    }
   };
 
   return (
