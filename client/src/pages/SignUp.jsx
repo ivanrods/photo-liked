@@ -3,21 +3,27 @@ import { Link, useNavigate } from "react-router-dom";
 import Submit from "../components/Submit";
 import InputForm from "../components/InputForm";
 import Title from "../components/Title";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema } from "../schemas/registerSchema";
+
 function SignUp() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = async (data) => {
+    const res = await registerUser(data);
+    alert(res.token ? "Registro bem-sucedido!" : res.error);
+    if (res.token) navigate("/signIn");
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await registerUser(form);
-    alert(res.message || res.error);
-    navigate("/signIn");
-  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-200 to-gray-100 px-4">
       <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl">
@@ -32,30 +38,30 @@ function SignUp() {
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center gap-6">
           <Title title="Crie sua conta" />
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <InputForm
+              register={register}
               placeholder="Digite seu nome"
               type="text"
               label="Nome"
-              id="name"
               name="name"
-              onChange={handleChange}
+              errors={errors}
             />
             <InputForm
+              register={register}
+              name="email"
+              label="Email"
               placeholder="Digite seu email"
               type="email"
-              label="Email"
-              id="email"
-              name="email"
-              onChange={handleChange}
+              errors={errors}
             />
             <InputForm
+              register={register}
+              name="password"
+              label="Senha"
               placeholder="Digite sua senha"
               type="password"
-              label="Senha"
-              id="password"
-              name="password"
-              onChange={handleChange}
+              errors={errors}
             />
 
             <Submit type={"submit"} value="Criar conta" />
