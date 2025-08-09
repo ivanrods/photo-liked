@@ -1,6 +1,7 @@
 import { FaHeart } from "react-icons/fa";
 import { useRef, useState, useEffect } from "react";
 import { FaDownload } from "react-icons/fa6";
+import { toast } from "sonner";
 
 function Figure({ onClick, src, alt, description, like, mod, onLike }) {
   const imgRef = useRef(null);
@@ -87,11 +88,11 @@ function Figure({ onClick, src, alt, description, like, mod, onLike }) {
                     document.body.removeChild(link);
                     window.URL.revokeObjectURL(url);
                   } catch (error) {
-                    alert("Falha ao baixar a imagem");
+                    toast.error("Falha ao baixar a imagem");
                     console.error(error);
                   }
                 }}
-                className="text-gray-600 text-xl"
+                className="text-gray-600 text-xl cursor-pointer hover:text-gray-700"
               />
             )}
             <FaHeart

@@ -24,7 +24,6 @@ function Header() {
   const verificarTecla = (evento) => {
     const value = evento.target.value.trim();
     if (evento.key === "Enter" && value) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
       setLoadMoreFig(9);
       setSearch(inputValue);
       navigate("/search");
