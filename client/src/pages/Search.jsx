@@ -32,17 +32,22 @@ function Search() {
         )}
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loadFigures.map((photo) => (
-            <Figure
-              key={photo.id}
-              src={photo.src.large}
-              alt={photo.alt}
-              description={photo.alt}
-              like={photo.liked}
-              onClick={() => handleFigureClick(photo)}
-              onLike={() => toggleLiked(photo.id)}
-            />
-          ))}
+          {loadFigures
+            .filter(
+              (photo, index, self) =>
+                index === self.findIndex((p) => p.id === photo.id)
+            )
+            .map((photo) => (
+              <Figure
+                key={photo.id}
+                src={photo.src.large}
+                alt={photo.alt}
+                description={photo.alt}
+                like={photo.liked}
+                onClick={() => handleFigureClick(photo)}
+                onLike={() => toggleLiked(photo.id)}
+              />
+            ))}
         </section>
         {toggleFigure && (
           <Modal

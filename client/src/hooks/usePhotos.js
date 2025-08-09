@@ -16,6 +16,12 @@ const usePhotos = (searchTerm = "") => {
   const { handleToggleLike, removeLikeFromFavorites } = useLikes();
 
   useEffect(() => {
+    setLoadFigures([]);
+    setLoadMoreFig(12);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+
+  useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
       try {

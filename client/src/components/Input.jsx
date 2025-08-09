@@ -14,7 +14,7 @@ function Input({ showSearch, onClick, onKeyPress, onChange }) {
         onKeyPress={onKeyPress}
         className="focus:outline-none w-full h-full bg-transparent"
         type="text"
-        placeholder="Search for images and collections"
+        placeholder="Pesquisar imagens e coleções"
         onChange={onChange}
         maxLength={50}
       />
