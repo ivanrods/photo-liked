@@ -6,7 +6,6 @@ function Modal({ onClick, src, alt, mod, description, like, onLike }) {
   mod = true;
 
   const handleClickOutside = (e) => {
-    // Fecha o modal somente se o clique for no fundo (container), e não no conteúdo
     if (e.target === e.currentTarget) {
       mod = false;
       onClick();

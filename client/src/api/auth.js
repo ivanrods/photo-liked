@@ -18,6 +18,10 @@ export const loginUser = async (data) => {
 
   const json = await res.json();
 
+  if (!res.ok) {
+    throw new Error(json.error || "Erro ao fazer login");
+  }
+
   if (json.token) {
     localStorage.setItem("token", json.token);
     localStorage.setItem("user", JSON.stringify(json.user));
