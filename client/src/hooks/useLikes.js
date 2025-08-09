@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { DataContext } from "../context/DataProvider";
 import { toggleLike, removeLike } from "../services/likeService";
+import { toast } from "sonner";
 
 export function useLikes() {
   const {
@@ -15,7 +16,7 @@ export function useLikes() {
 
   const handleToggleLike = (photoId) => {
     if (!token) {
-      alert("Você precisa estar logado para curtir imagens.");
+      toast.error("Você precisa estar logado para curtir imagens.");
       return;
     }
 

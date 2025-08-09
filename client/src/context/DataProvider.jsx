@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useRef } from "react";
 
 import { getLikes, saveLikes } from "../api/likes";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const DataContext = createContext();
 
 function DataProvider({ children }) {
