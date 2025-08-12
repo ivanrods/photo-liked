@@ -1,39 +1,22 @@
 import { FaCamera, FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
-import Input from "./Input";
+
 import { useNavigate, NavLink } from "react-router-dom";
-import { useState, useContext } from "react";
-import { DataContext } from "../context/DataProvider";
+import { useState } from "react";
+import { IoArrowBackSharp } from "react-icons/io5";
 
 function Header() {
-  const { setSearch } = useContext(DataContext);
-  const { setLoadMoreFig, setLoadFigures } = useContext(DataContext);
+  const user = JSON.parse(localStorage.getItem("user"));
   const [showSearch, setShowSearch] = useState(true);
   const [inputValue, setInputValue] = useState("");
-
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
-
-  const handleInputChange = (event) => {
-    const value = event.target.value.trim();
-    if (value) {
-      setInputValue(value);
-    }
-  };
 
   const verificarTecla = (evento) => {
     const value = evento.target.value.trim();
     if (evento.key === "Enter" && value) {
-      setLoadMoreFig(9);
-      setSearch(inputValue);
-      navigate("/search");
-      setLoadFigures([]);
+      navigate(`/search?query=${encodeURIComponent(value)}`);
     }
   };
-
-  function toggleSearch() {
-    setShowSearch(!showSearch);
-  }
 
   return (
     <header className="w-full fixed bg-white px-4 z-10">
@@ -67,18 +50,31 @@ function Header() {
             </p>
 
             <FaSearch
-              onClick={toggleSearch}
+              onClick={() => setShowSearch(false)}
               className="md:hidden text-xl font-bold text-gray-600 cursor-pointer"
             />
           </div>
         )}
 
-        <Input
-          showSearch={showSearch}
-          onClick={toggleSearch}
-          onKeyPress={verificarTecla}
-          onChange={handleInputChange}
-        />
+        <div
+          className={`flex items-center gap-2 md:flex w-3/4 bg-gray-100 px-4 py-2 rounded-md ${
+            showSearch ? "hidden" : "flex"
+          }`}
+        >
+          <IoArrowBackSharp
+            className="text-2xl text-gray-600 md:hidden"
+            onClick={() => setShowSearch(true)}
+          />
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={verificarTecla}
+            placeholder="Pesquisar imagens e coleções"
+            maxLength={50}
+            className="focus:outline-none w-full h-full bg-transparent"
+          />
+        </div>
 
         <NavLink
           className={({ isActive }) =>

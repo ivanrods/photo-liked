@@ -1,33 +1,35 @@
+import { useSearchParams } from "react-router-dom";
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Loader from "../components/Loader";
 
 import usePhotos from "../hooks/usePhotos";
-import { DataContext } from "../context/DataProvider";
-import { useContext } from "react";
 
 function Search() {
-  const { search } = useContext(DataContext);
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get("query") || "";
+
   const {
+    photos,
     loadFigures,
     isLoading,
-    selectedPhoto,
-    toggleFigure,
     handleFigureClick,
+    selectedPhoto,
+    handleToggleLike,
+    toggleFigure,
     closeModal,
-    toggleLiked,
-  } = usePhotos(search);
+  } = usePhotos(searchTerm);
 
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       <div className="max-w-screen-xl justify-center mx-auto ">
-        {loadFigures.length > 0 ? (
+        {photos.length > 0 ? (
           <h2 className="text-2xl font-bold text-gray-700 mt-10 mb-6">
-            Resultados para: {search}
+            Resultados para: {searchTerm}
           </h2>
         ) : (
           <h2 className="text-2xl font-bold text-gray-700 mt-10 mb-6">
-            Ops, não conseguimos encontrar nenhum resultado para: {search}
+            Ops, não conseguimos encontrar nenhum resultado para: {searchTerm}
           </h2>
         )}
 
@@ -45,7 +47,7 @@ function Search() {
                 description={photo.alt}
                 like={photo.liked}
                 onClick={() => handleFigureClick(photo)}
-                onLike={() => toggleLiked(photo.id)}
+                onLike={() => handleToggleLike(photo.id)}
               />
             ))}
         </section>
@@ -56,7 +58,7 @@ function Search() {
             alt={selectedPhoto.alt}
             like={selectedPhoto.liked}
             onClick={closeModal}
-            onLike={() => toggleLiked(selectedPhoto.id)}
+            onLike={() => handleToggleLike(selectedPhoto.id)}
           />
         )}
       </div>

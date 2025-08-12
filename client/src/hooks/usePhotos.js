@@ -8,12 +8,32 @@ import { getLikes } from "../api/likes";
 const usePhotos = (searchTerm = "") => {
   const { loadFigures, setLoadFigures, loadMoreFig, setLoadMoreFig, dataLike } =
     useContext(DataContext);
+  const { handleToggleLike, removeLikeFromFavorites } = useLikes();
 
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [toggleFigure, setToggleFigure] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [photos, setPhotos] = useState([]);
+  const [page, setPage] = useState(1);
 
-  const { handleToggleLike, removeLikeFromFavorites } = useLikes();
+  useEffect(() => {
+    if (!searchTerm) return;
+
+    setPhotos([]); // reseta ao trocar a busca
+    setPage(1);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (!searchTerm) return;
+    setIsLoading(true);
+
+    fetch(`/api/photos?query=${searchTerm}&page=${page}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPhotos((prev) => [...prev, ...data.results]);
+      })
+      .finally(() => setIsLoading(false));
+  }, [searchTerm, page]);
 
   useEffect(() => {
     setLoadFigures([]);
@@ -82,6 +102,7 @@ const usePhotos = (searchTerm = "") => {
     removeLikeFromFavorites,
     setSelectedPhoto,
     setLoadFigures,
+    photos,
   };
 };
 
