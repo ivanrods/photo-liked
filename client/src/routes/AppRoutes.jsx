@@ -12,17 +12,24 @@ import ScrollToTop from "../components/ScrollToTop";
 function AppRoutes() {
   return (
     <>
-      {" "}
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/liked" element={<Liked />} />
+
         <Route
           path="/profile"
           element={
             <PrivateRoute>
               <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/liked"
+          element={
+            <PrivateRoute>
+              <Liked />
             </PrivateRoute>
           }
         />
