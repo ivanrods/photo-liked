@@ -1,17 +1,18 @@
-import { useContext } from "react";
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
-
-import { DataContext } from "../context/DataProvider";
-import usePhotos from "../hooks/usePhotos";
-import { useLikes } from "../hooks/useLikes";
+import { usePhotoStore } from "../stores/usePhotoStore";
 
 function Liked() {
-  const { selectedPhoto, toggleFigure, handleFigureClick, closeModal } =
-    usePhotos();
+  const dataLike = usePhotoStore((state) => state.dataLike);
+  const selectedPhoto = usePhotoStore((state) => state.selectedPhoto);
+  const toggleFigure = usePhotoStore((state) => state.toggleFigure);
 
-  const { dataLike } = useContext(DataContext);
-  const { removeLikeFromFavorites } = useLikes();
+  // Funções
+  const openModal = usePhotoStore((state) => state.openModal);
+  const closeModal = usePhotoStore((state) => state.closeModal);
+  const removeLikeFromFavorites = usePhotoStore(
+    (state) => state.removeLikeFromFavorites
+  );
 
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
@@ -27,7 +28,7 @@ function Liked() {
               description={photo.alt}
               alt={photo.alt}
               like={photo.liked}
-              onClick={() => handleFigureClick(photo)}
+              onClick={() => openModal(photo)}
               onLike={() => removeLikeFromFavorites(photo.id)}
             />
           ))}

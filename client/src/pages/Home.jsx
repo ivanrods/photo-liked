@@ -1,24 +1,31 @@
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Loader from "../components/Loader";
-
-import usePhotos from "../hooks/usePhotos";
+import { usePhotoStore } from "../stores/usePhotoStore"; // sua store do Zustand
+import { useEffect } from "react";
 
 function Home() {
-  const {
-    loadFigures,
-    isLoading,
-    selectedPhoto,
-    toggleFigure,
-    handleFigureClick,
-    closeModal,
-    handleToggleLike,
-  } = usePhotos();
+  // Estados da store
+  const loadFigures = usePhotoStore((state) => state.homeFigures); // array específico da Home
+  const isLoading = usePhotoStore((state) => state.isLoading);
+  const selectedPhoto = usePhotoStore((state) => state.selectedPhoto);
+  const toggleFigure = usePhotoStore((state) => state.toggleFigure);
+
+  // Funções da store
+  const fetchHomePhotos = usePhotoStore((state) => state.fetchHomePhotos);
+  const handleFigureClick = usePhotoStore((state) => state.openModal);
+  const closeModal = usePhotoStore((state) => state.closeModal);
+  const handleToggleLike = usePhotoStore((state) => state.handleToggleLike);
+
+  // Carrega fotos da Home ao montar o componente
+  useEffect(() => {
+    fetchHomePhotos();
+  }, [fetchHomePhotos]);
 
   return (
-    <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
+    <main className="flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
       {loadFigures.length > 0 && (
-        <div className="max-w-screen-xl justify-center mx-auto ">
+        <div className="max-w-screen-xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-700 mt-10 mb-6">Home</h2>
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loadFigures
@@ -28,17 +35,17 @@ function Home() {
               )
               .map((photo) => (
                 <Figure
-                  src={photo.src.large}
-                  description={photo.alt}
-                  alt={photo.alt}
                   key={photo.id}
+                  src={photo.src.large}
+                  alt={photo.alt}
+                  description={photo.alt}
                   like={photo.liked}
                   onClick={() => handleFigureClick(photo)}
                   onLike={() => handleToggleLike(photo.id)}
                 />
               ))}
           </section>
-          {toggleFigure && (
+          {toggleFigure && selectedPhoto && (
             <Modal
               src={selectedPhoto.src.large}
               description={selectedPhoto.alt}
@@ -54,4 +61,5 @@ function Home() {
     </main>
   );
 }
+
 export default Home;

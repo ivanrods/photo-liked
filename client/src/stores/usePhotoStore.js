@@ -5,26 +5,38 @@ import { toggleLike, removeLike } from "../services/likeService";
 import { fetchPhotos } from "../api/pexels";
 
 export const usePhotoStore = create((set, get) => ({
-  // Estado
+  // ====================
+  // ESTADOS
+  // ====================
+  homeFigures: [],
+  searchFigures: [],
   search: "",
-  loadMoreFig: 12,
-  loadFigures: [],
-  dataLike: [],
+  isLoading: false,
   selectedPhoto: null,
   toggleFigure: false,
-  isLoading: false,
+  dataLike: [],
 
-  // Ações
-  setSearch: (value) => set({ search: value }),
-  setLoadMoreFig: (value) => set({ loadMoreFig: value }),
-  setSelectedPhoto: (photo) => set({ selectedPhoto: photo }),
-  closeModal: () => set({ toggleFigure: false }),
+  // ====================
+  // AÇÕES DE MODAL
+  // ====================
   openModal: (photo) => set({ selectedPhoto: photo, toggleFigure: true }),
+  closeModal: () => set({ toggleFigure: false }),
 
-  // Carregar likes do backend
+  // ====================
+  // AÇÕES DE PESQUISA
+  // ====================
+  setSearchTerm: (value) => {
+    set({ search: value });
+    get().fetchSearchPhotos(); // dispara a busca automaticamente
+  },
+
+  // ====================
+  // LIKES
+  // ====================
   fetchLikes: async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
+
     try {
       const likes = await getLikes();
       set({ dataLike: likes });
@@ -33,10 +45,10 @@ export const usePhotoStore = create((set, get) => ({
     }
   },
 
-  // Salvar likes no backend
   persistLikes: async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
+
     try {
       await saveLikes(get().dataLike);
     } catch (err) {
@@ -44,58 +56,37 @@ export const usePhotoStore = create((set, get) => ({
     }
   },
 
-  // Buscar fotos da API
-  fetchAndSetPhotos: async () => {
-    const { search, loadMoreFig, dataLike } = get();
-    if (!search) return;
-
-    set({ isLoading: true });
-    try {
-      const photos = await fetchPhotos(search, loadMoreFig);
-      const updated = photos.map((photo) => ({
-        ...photo,
-        liked: dataLike.some((liked) => liked.id === photo.id),
-      }));
-      set((state) => ({
-        loadFigures: [...state.loadFigures, ...updated],
-      }));
-    } catch (err) {
-      console.error("Erro ao buscar fotos:", err);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
-
-  // Like / Unlike
-  handleToggleLike: (photoId) => {
+  handleToggleLike: (photoId, type = "home") => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Você precisa estar logado para curtir imagens.");
-      return;
-    }
+    if (!token) return alert("Você precisa estar logado.");
 
-    const { loadFigures, selectedPhoto } = get();
-    const photoToUpdate = loadFigures.find((p) => p.id === photoId);
+    const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
+    const figures = get()[figuresKey];
+    const selected = get().selectedPhoto;
+
+    const photoToUpdate = figures.find((p) => p.id === photoId);
     if (!photoToUpdate) return;
 
     const updatedPhoto = { ...photoToUpdate, liked: !photoToUpdate.liked };
 
     set((state) => ({
       dataLike: toggleLike(updatedPhoto, state.dataLike),
-      loadFigures: state.loadFigures.map((p) =>
+      [figuresKey]: state[figuresKey].map((p) =>
         p.id === photoId ? updatedPhoto : p
       ),
       selectedPhoto:
-        selectedPhoto?.id === photoId ? updatedPhoto : state.selectedPhoto,
+        selected?.id === photoId ? updatedPhoto : state.selectedPhoto,
     }));
 
     get().persistLikes();
   },
 
-  removeLikeFromFavorites: (photoId) => {
+  removeLikeFromFavorites: (photoId, type = "home") => {
+    const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
+
     set((state) => ({
       dataLike: removeLike(photoId, state.dataLike),
-      loadFigures: state.loadFigures.map((p) =>
+      [figuresKey]: state[figuresKey].map((p) =>
         p.id === photoId ? { ...p, liked: false } : p
       ),
       selectedPhoto:
@@ -105,5 +96,44 @@ export const usePhotoStore = create((set, get) => ({
     }));
 
     get().persistLikes();
+  },
+
+  // ====================
+  // FETCH FOTOS
+  // ====================
+  fetchHomePhotos: async () => {
+    set({ isLoading: true });
+    try {
+      const photos = await fetchPhotos("", 12); // curated photos
+      // adiciona liked se já estiver em favoritos
+      const updated = photos.map((photo) => ({
+        ...photo,
+        liked: get().dataLike.some((liked) => liked.id === photo.id),
+      }));
+      set({ homeFigures: updated });
+    } catch (err) {
+      console.error("Erro ao buscar fotos da Home:", err);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  fetchSearchPhotos: async () => {
+    const { search } = get();
+    if (!search) return;
+
+    set({ isLoading: true });
+    try {
+      const photos = await fetchPhotos(search, 12);
+      const updated = photos.map((photo) => ({
+        ...photo,
+        liked: get().dataLike.some((liked) => liked.id === photo.id),
+      }));
+      set({ searchFigures: updated });
+    } catch (err) {
+      console.error("Erro ao buscar fotos de pesquisa:", err);
+    } finally {
+      set({ isLoading: false });
+    }
   },
 }));
