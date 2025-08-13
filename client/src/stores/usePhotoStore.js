@@ -5,9 +5,8 @@ import { toggleLike, removeLike } from "../services/likeService";
 import { fetchPhotos } from "../api/pexels";
 
 export const usePhotoStore = create((set, get) => ({
-  // ====================
   // ESTADOS
-  // ====================
+
   homeFigures: [],
   searchFigures: [],
   search: "",
@@ -16,23 +15,20 @@ export const usePhotoStore = create((set, get) => ({
   toggleFigure: false,
   dataLike: [],
 
-  // ====================
   // AÇÕES DE MODAL
-  // ====================
+
   openModal: (photo) => set({ selectedPhoto: photo, toggleFigure: true }),
   closeModal: () => set({ toggleFigure: false }),
 
-  // ====================
   // AÇÕES DE PESQUISA
-  // ====================
+
   setSearchTerm: (value) => {
     set({ search: value });
     get().fetchSearchPhotos(); // dispara a busca automaticamente
   },
 
-  // ====================
   // LIKES
-  // ====================
+
   fetchLikes: async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -48,6 +44,9 @@ export const usePhotoStore = create((set, get) => ({
   persistLikes: async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
+
+    // Só persiste se já tiver carregado os dados iniciais
+    if (get().dataLike.length === 0) return;
 
     try {
       await saveLikes(get().dataLike);
@@ -78,19 +77,21 @@ export const usePhotoStore = create((set, get) => ({
         selected?.id === photoId ? updatedPhoto : state.selectedPhoto,
     }));
 
+    // Persiste apenas após atualizar localmente
     get().persistLikes();
   },
 
   removeLikeFromFavorites: (photoId, type = "home") => {
     const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
+    const selected = get().selectedPhoto;
 
     set((state) => ({
-      dataLike: removeLike(photoId, state.dataLike),
+      dataLike: removeLike(photoId, state.dataLike), // agora remove por id
       [figuresKey]: state[figuresKey].map((p) =>
         p.id === photoId ? { ...p, liked: false } : p
       ),
       selectedPhoto:
-        state.selectedPhoto?.id === photoId
+        selected?.id === photoId
           ? { ...state.selectedPhoto, liked: false }
           : state.selectedPhoto,
     }));
@@ -98,9 +99,8 @@ export const usePhotoStore = create((set, get) => ({
     get().persistLikes();
   },
 
-  // ====================
   // FETCH FOTOS
-  // ====================
+
   fetchHomePhotos: async () => {
     set({ isLoading: true });
     try {

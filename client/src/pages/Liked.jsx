@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import { usePhotoStore } from "../stores/usePhotoStore";
@@ -13,6 +14,10 @@ function Liked() {
   const removeLikeFromFavorites = usePhotoStore(
     (state) => state.removeLikeFromFavorites
   );
+
+  useEffect(() => {
+    usePhotoStore.getState().fetchLikes();
+  }, []);
 
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
