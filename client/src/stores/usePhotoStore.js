@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { getLikes, saveLikes } from "../api/likes";
 import { toggleLike, removeLike } from "../services/likeService";
 import { fetchPhotos } from "../api/pexels";
+import { toast } from "sonner";
 
 export const usePhotoStore = create((set, get) => ({
   // ESTADOS
@@ -14,8 +15,8 @@ export const usePhotoStore = create((set, get) => ({
   selectedPhoto: null,
   toggleFigure: false,
   dataLike: [],
-  loadMore: 6,
-  loadMoreSearch: 3,
+  loadMore: 9,
+  loadMoreSearch: 9,
 
   // AÇÕES DE MODAL
 
@@ -99,7 +100,7 @@ export const usePhotoStore = create((set, get) => ({
 
   handleToggleLike: (photoId, type = "home") => {
     const token = localStorage.getItem("token");
-    if (!token) return alert("Você precisa estar logado.");
+    if (!token) return toast.error("Você precisa estar logado.");
 
     const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
     const figures = get()[figuresKey];
