@@ -14,11 +14,27 @@ export const usePhotoStore = create((set, get) => ({
   selectedPhoto: null,
   toggleFigure: false,
   dataLike: [],
+  loadMore: 6,
+  loadMoreSearch: 3,
 
   // AÇÕES DE MODAL
 
   openModal: (photo) => set({ selectedPhoto: photo, toggleFigure: true }),
   closeModal: () => set({ toggleFigure: false }),
+
+  // AÇÕES CARREGAR MAIS FOTOS
+
+  setLoadMore: (updater) =>
+    set((state) => ({
+      loadMore:
+        typeof updater === "function" ? updater(state.loadMore) : updater,
+    })),
+
+  setLoadMoreSearch: (updater) =>
+    set((state) => ({
+      loadMoreSearch:
+        typeof updater === "function" ? updater(state.loadMoreSearch) : updater,
+    })),
 
   // AÇÕES DE PESQUISA
 
@@ -83,6 +99,7 @@ export const usePhotoStore = create((set, get) => ({
 
   removeLikeFromFavorites: (photoId, type = "home") => {
     const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
+
     const selected = get().selectedPhoto;
 
     set((state) => ({
@@ -103,12 +120,14 @@ export const usePhotoStore = create((set, get) => ({
 
   fetchHomePhotos: async () => {
     set({ isLoading: true });
+    const { loadMore, dataLike } = get();
+
     try {
-      const photos = await fetchPhotos("", 12); // curated photos
+      const photos = await fetchPhotos("", loadMore); // curated photos
       // adiciona liked se já estiver em favoritos
       const updated = photos.map((photo) => ({
         ...photo,
-        liked: get().dataLike.some((liked) => liked.id === photo.id),
+        liked: dataLike.some((liked) => liked.id === photo.id),
       }));
       set({ homeFigures: updated });
     } catch (err) {
@@ -119,15 +138,15 @@ export const usePhotoStore = create((set, get) => ({
   },
 
   fetchSearchPhotos: async () => {
-    const { search } = get();
+    const { loadMoreSearch, search, dataLike } = get();
+    set({ isLoading: true });
     if (!search) return;
 
-    set({ isLoading: true });
     try {
-      const photos = await fetchPhotos(search, 12);
+      const photos = await fetchPhotos(search, loadMoreSearch);
       const updated = photos.map((photo) => ({
         ...photo,
-        liked: get().dataLike.some((liked) => liked.id === photo.id),
+        liked: dataLike.some((liked) => liked.id === photo.id),
       }));
       set({ searchFigures: updated });
     } catch (err) {

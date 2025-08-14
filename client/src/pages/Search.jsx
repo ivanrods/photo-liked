@@ -22,11 +22,36 @@ function Search() {
   const closeModal = usePhotoStore((state) => state.closeModal);
   const handleToggleLike = usePhotoStore((state) => state.handleToggleLike);
 
-  // Atualiza o termo de pesquisa e busca fotos
+  const setLoadMoreSearch = usePhotoStore((state) => state.setLoadMoreSearch);
+  const loadMoreSearch = usePhotoStore((state) => state.loadMoreSearch);
+
+  // Busca mais fotos quando o scroll chega ou fim
   useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.scrollHeight - 10
+      ) {
+        setLoadMoreSearch((prev) => prev + 3);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [setLoadMoreSearch]);
+
+  // Reseta a cada nova pesquisa
+  useEffect(() => {
+    setLoadMoreSearch(6); // reset
     setSearchTerm(searchTerm);
-    fetchSearchPhotos();
-  }, [searchTerm, setSearchTerm, fetchSearchPhotos]);
+  }, [searchTerm, setLoadMoreSearch, setSearchTerm]);
+
+  // Busca fotos sempre que loadMoreSearch mudar
+  useEffect(() => {
+    if (searchTerm) {
+      fetchSearchPhotos(); // agora pega o valor correto de loadMoreSearch da store
+    }
+  }, [loadMoreSearch, fetchSearchPhotos, searchTerm]);
 
   return (
     <main className=" flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
@@ -55,7 +80,7 @@ function Search() {
                 description={photo.alt}
                 like={photo.liked}
                 onClick={() => openModal(photo)}
-                onLike={() => handleToggleLike(photo.id)}
+                onLike={() => handleToggleLike(photo.id, "search")}
               />
             ))}
         </section>
@@ -66,7 +91,7 @@ function Search() {
             alt={selectedPhoto.alt}
             like={selectedPhoto.liked}
             onClick={closeModal}
-            onLike={() => handleToggleLike(selectedPhoto.id)}
+            onLike={() => handleToggleLike(selectedPhoto.id, "search")}
           />
         )}
       </div>

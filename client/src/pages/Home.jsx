@@ -17,10 +17,27 @@ function Home() {
   const closeModal = usePhotoStore((state) => state.closeModal);
   const handleToggleLike = usePhotoStore((state) => state.handleToggleLike);
 
-  // Carrega fotos da Home ao montar o componente
+  // Pegar da store
+  const loadMore = usePhotoStore((state) => state.loadMore);
+  const setLoadMore = usePhotoStore((state) => state.setLoadMore);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.scrollHeight - 10
+      ) {
+        setLoadMore((prev) => prev + 3);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [setLoadMore]);
+
   useEffect(() => {
     fetchHomePhotos();
-  }, [fetchHomePhotos]);
+  }, [loadMore, fetchHomePhotos]);
 
   return (
     <main className="flex flex-col bg-gray-100 px-4 py-10 min-h-screen">
