@@ -43,79 +43,6 @@ export const usePhotoStore = create((set, get) => ({
     get().fetchSearchPhotos(); // dispara a busca automaticamente
   },
 
-  // LIKES
-
-  fetchLikes: async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      const likes = await getLikes();
-      set({ dataLike: likes });
-    } catch (err) {
-      console.error("Erro ao buscar likes:", err);
-    }
-  },
-
-  persistLikes: async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    // Só persiste se já tiver carregado os dados iniciais
-    if (get().dataLike.length === 0) return;
-
-    try {
-      await saveLikes(get().dataLike);
-    } catch (err) {
-      console.error("Erro ao salvar likes:", err);
-    }
-  },
-
-  handleToggleLike: (photoId, type = "home") => {
-    const token = localStorage.getItem("token");
-    if (!token) return alert("Você precisa estar logado.");
-
-    const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
-    const figures = get()[figuresKey];
-    const selected = get().selectedPhoto;
-
-    const photoToUpdate = figures.find((p) => p.id === photoId);
-    if (!photoToUpdate) return;
-
-    const updatedPhoto = { ...photoToUpdate, liked: !photoToUpdate.liked };
-
-    set((state) => ({
-      dataLike: toggleLike(updatedPhoto, state.dataLike),
-      [figuresKey]: state[figuresKey].map((p) =>
-        p.id === photoId ? updatedPhoto : p
-      ),
-      selectedPhoto:
-        selected?.id === photoId ? updatedPhoto : state.selectedPhoto,
-    }));
-
-    // Persiste apenas após atualizar localmente
-    get().persistLikes();
-  },
-
-  removeLikeFromFavorites: (photoId, type = "home") => {
-    const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
-
-    const selected = get().selectedPhoto;
-
-    set((state) => ({
-      dataLike: removeLike(photoId, state.dataLike), // agora remove por id
-      [figuresKey]: state[figuresKey].map((p) =>
-        p.id === photoId ? { ...p, liked: false } : p
-      ),
-      selectedPhoto:
-        selected?.id === photoId
-          ? { ...state.selectedPhoto, liked: false }
-          : state.selectedPhoto,
-    }));
-
-    get().persistLikes();
-  },
-
   // FETCH FOTOS
 
   fetchHomePhotos: async () => {
@@ -154,5 +81,78 @@ export const usePhotoStore = create((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  // LIKES
+
+  fetchLikes: async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const likes = await getLikes();
+      set({ dataLike: likes });
+    } catch (err) {
+      console.error("Erro ao buscar likes:", err);
+    }
+  },
+
+  handleToggleLike: (photoId, type = "home") => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("Você precisa estar logado.");
+
+    const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
+    const figures = get()[figuresKey];
+    const selected = get().selectedPhoto;
+
+    const photoToUpdate = figures.find((p) => p.id === photoId);
+    if (!photoToUpdate) return;
+
+    const updatedPhoto = { ...photoToUpdate, liked: !photoToUpdate.liked };
+
+    set((state) => {
+      const newDataLike = toggleLike(updatedPhoto, state.dataLike);
+
+      // Persist diretamente aqui
+      if (newDataLike.length > 0) {
+        saveLikes(newDataLike).catch((err) =>
+          console.error("Erro ao salvar likes:", err)
+        );
+      }
+
+      return {
+        dataLike: newDataLike,
+        [figuresKey]: state[figuresKey].map((p) =>
+          p.id === photoId ? updatedPhoto : p
+        ),
+        selectedPhoto:
+          selected?.id === photoId ? updatedPhoto : state.selectedPhoto,
+      };
+    });
+  },
+
+  removeLikeFromFavorites: (photoId, type = "home") => {
+    const figuresKey = type === "home" ? "homeFigures" : "searchFigures";
+    const selected = get().selectedPhoto;
+
+    set((state) => {
+      const newDataLike = removeLike(photoId, state.dataLike);
+
+      // Persist diretamente aqui
+      saveLikes(newDataLike).catch((err) =>
+        console.error("Erro ao salvar likes:", err)
+      );
+
+      return {
+        dataLike: newDataLike,
+        [figuresKey]: state[figuresKey].map((p) =>
+          p.id === photoId ? { ...p, liked: false } : p
+        ),
+        selectedPhoto:
+          selected?.id === photoId
+            ? { ...state.selectedPhoto, liked: false }
+            : state.selectedPhoto,
+      };
+    });
   },
 }));

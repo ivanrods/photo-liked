@@ -42,6 +42,7 @@ function Search() {
 
   // Reseta a cada nova pesquisa
   useEffect(() => {
+    window.scrollTo(0, 0);
     setLoadMoreSearch(6); // reset
     setSearchTerm(searchTerm);
   }, [searchTerm, setLoadMoreSearch, setSearchTerm]);
