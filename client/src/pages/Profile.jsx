@@ -16,7 +16,7 @@ function Profile() {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(profileSchema),
   });
@@ -87,13 +87,19 @@ function Profile() {
             errors={errors}
           />
           <div className="flex flex-col gap-2">
-            <Submit value="Salvar" type={"submit"} />
+            <Submit value="Salvar" type={"submit"} load={isSubmitting} />
             <Submit
               value=" Deletar Conta"
               type={"button"}
               onClick={handleDeleteAccount}
+              load={false}
             />
-            <Submit value=" Sair" type={"button"} onClick={handleLogout} />
+            <Submit
+              value="Sair"
+              type={"button"}
+              onClick={handleLogout}
+              load={false}
+            />
           </div>
         </form>
 

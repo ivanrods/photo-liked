@@ -14,7 +14,7 @@ function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
@@ -49,7 +49,7 @@ function Login() {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <InputForm
-              register={register} // PASSANDO O REGISTER AQUI
+              register={register}
               name="email"
               label="Email"
               placeholder="Digite seu email"
@@ -65,7 +65,7 @@ function Login() {
               type="password"
               errors={errors}
             />
-            <Submit type={"submit"} value="Entrar" />
+            <Submit type={"submit"} value="Entrar" load={isSubmitting} />
           </form>
 
           <div className="text-center">

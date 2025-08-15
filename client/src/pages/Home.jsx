@@ -1,7 +1,7 @@
 import Figure from "../components/Figure";
 import Modal from "../components/Modal";
 import Loader from "../components/Loader";
-import { usePhotoStore } from "../stores/usePhotoStore"; // sua store do Zustand
+import { usePhotoStore } from "../stores/usePhotoStore";
 import { useEffect } from "react";
 
 function Home() {

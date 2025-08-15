@@ -14,7 +14,7 @@ function Register() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
@@ -73,7 +73,7 @@ function Register() {
               errors={errors}
             />
 
-            <Submit type={"submit"} value="Criar conta" />
+            <Submit type={"submit"} value="Criar conta" load={isSubmitting} />
           </form>
 
           <div className="text-center">
