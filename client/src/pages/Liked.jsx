@@ -25,7 +25,7 @@ function Liked() {
         <h2 className="text-2xl font-bold text-gray-700 mt-10 mb-6">
           Imagens curtidas
         </h2>
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {dataLike.map((photo) => (
             <Figure
               src={photo.src.large}

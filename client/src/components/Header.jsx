@@ -1,22 +1,48 @@
 import { FaCamera, FaSearch } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
-
 import { useNavigate, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoArrowBackSharp } from "react-icons/io5";
 
 function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [showSearch, setShowSearch] = useState(true);
   const [inputValue, setInputValue] = useState("");
+
   const navigate = useNavigate();
 
-  const verificarTecla = (evento) => {
-    const value = evento.target.value.trim();
-    if (evento.key === "Enter" && value) {
-      navigate(`/search?query=${encodeURIComponent(value)}`);
+  //Funçoes de busca de imagem
+
+  const navigateToSearch = () => {
+    if (inputValue.trim()) {
+      navigate(`/search?query=${encodeURIComponent(inputValue)}`);
+      setInputValue("");
     }
   };
+
+  const checkKey = (evento) => {
+    if (evento.key === "Enter" && inputValue.trim()) {
+      navigateToSearch();
+    }
+  };
+
+  //Funçoes de mostrar os butões
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setShowSearch(true);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <header className="w-full fixed bg-white px-4 z-10">
@@ -69,10 +95,14 @@ function Header() {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={verificarTecla}
+            onKeyDown={checkKey}
             placeholder="Pesquisar imagens e coleções"
             maxLength={50}
             className="focus:outline-none w-full h-full bg-transparent"
+          />
+          <FaSearch
+            className="text-xl text-gray-600 cursor-pointer"
+            onClick={navigateToSearch}
           />
         </div>
 
@@ -91,7 +121,7 @@ function Header() {
               className="w-8 h-8 rounded-full object-cover mb-1"
             />
           )}
-          {!user && <CgProfile className="text-3xl" />}
+          {!user && <CgProfile className="text-3xl " />}
         </NavLink>
       </div>
     </header>
